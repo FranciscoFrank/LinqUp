@@ -1,0 +1,25 @@
+## Visual Studio / Rider / VS Code cache & user files
+.vs/
+.idea/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+
+## Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Databases & local test DBs
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+## OS generated
+.DS_Store
+Thumbs.db

@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="LinqUp.API/LinqUp.API.csproj" Id="e7147408-bdaa-42d4-95ed-fbaffc0cc783" />
+  <Project Path="LinqUp.Shared/LinqUp.Shared.csproj" Id="0a9db7fc-25ba-45b6-a019-a35a0d4ef62f" />
+  <Project Path="LinqUp.Web/LinqUp.Web.csproj" />
+</Solution>
