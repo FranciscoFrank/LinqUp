@@ -1,0 +1,12 @@
+using LinqUp.Shared.Enums;
+
+namespace LinqUp.Shared.Dtos.Profile
+{
+    public class ContactMethodDto
+    {
+        public Guid Id { get; set; }
+        public ContactMethodType Type { get; set; }
+        public string Value { get; set; } = string.Empty;
+        public bool IsPrimary { get; set; }
+    }
+}
