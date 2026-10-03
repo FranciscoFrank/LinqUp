@@ -1,0 +1,26 @@
+@model LinqUp.Web.Models.Components.SelectFieldModel
+
+<div class="field">
+    <label class="field-label" for="@Model.Id" data-i18n="@Model.LabelKey">
+        @Model.Label
+        @if (Model.Required)
+        {
+            <span class="field-required" aria-hidden="true">*</span>
+        }
+    </label>
+    <select class="select" id="@Model.Id" name="@Model.Name" @(Model.Required ? "required" : "")>
+        @if (!string.IsNullOrEmpty(Model.Placeholder))
+        {
+            <option value="" disabled selected="@(Model.SelectedValue is null)" data-i18n="@Model.PlaceholderKey">@Model.Placeholder</option>
+        }
+        @foreach (var option in Model.Options)
+        {
+            <option value="@option.Value" selected="@(option.Value == Model.SelectedValue)">@option.Label</option>
+        }
+    </select>
+    @if (!string.IsNullOrEmpty(Model.HelpText))
+    {
+        <p class="field-help" data-i18n="@Model.HelpTextKey">@Model.HelpText</p>
+    }
+    <p class="field-error" data-error-for="@Model.Id"></p>
+</div>

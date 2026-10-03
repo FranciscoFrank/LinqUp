@@ -1,0 +1,9 @@
+@model LinqUp.Web.Models.Components.ButtonModel
+
+<button
+    id="@Model.Id"
+    type="@Model.Type"
+    class="btn btn-@Model.Variant @(Model.FullWidth ? "btn-full" : "")"
+    data-i18n="@Model.TextKey">
+    @Model.Text
+</button>

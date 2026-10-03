@@ -1,0 +1,42 @@
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container public-profile-container">
+    <div id="public-not-found" class="alert alert-info" data-i18n="profile.publicNotFound">Користувача не знайдено.</div>
+
+    <div id="public-profile">
+        <div class="profile-header">
+            <img id="pp-avatar-img" class="avatar" alt="Avatar" />
+            <div id="pp-avatar-fallback" class="avatar">?</div>
+            <div class="profile-header-info">
+                <h1 id="pp-fullname" class="mt-0 mb-0"></h1>
+                <div class="profile-nickname" id="pp-nickname"></div>
+                <div id="pp-goal-badge" class="badge badge-primary user-goal-badge" style="display:none;"></div>
+            </div>
+        </div>
+
+        <div id="pp-bio-card" class="card section">
+            <p id="pp-bio" class="mt-0 mb-0"></p>
+        </div>
+
+        <div class="card section">
+            <h3 class="section-title" data-i18n="profile.publicContacts">Контакти</h3>
+            <div id="pp-contacts" class="item-list"></div>
+            <p id="pp-contacts-empty" class="field-help" data-i18n="profile.contactsEmpty">Ще не додано жодного контакту.</p>
+        </div>
+
+        <div class="card section">
+            <h3 class="section-title" data-i18n="profile.publicSkills">Навички</h3>
+            <div id="pp-skills" class="item-list"></div>
+            <p id="pp-skills-empty" class="field-help" data-i18n="profile.skillsEmpty">Ще не додано жодної навички.</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const publicProfileNickname = @Html.Raw(System.Text.Json.JsonSerializer.Serialize((string)ViewBag.Nickname));
+    </script>
+    <script src="~/js/pages/public-profile.js"></script>
+}

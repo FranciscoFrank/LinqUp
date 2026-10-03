@@ -1,0 +1,714 @@
+@{
+    var culture = ViewContext.RouteData.Values["culture"]?.ToString() ?? "uk";
+    ViewData["Title"] = culture == "uk" ? "Політика конфіденційності та Cookie" : "Privacy & Cookie Policy";
+    ViewData["MetaDescription"] = culture == "uk" 
+        ? "Політика конфіденційності та використання файлів cookie платформи LinqUp. Дізнайтеся, як ми захищаємо ваші персональні дані відповідно до законодавства України та GDPR."
+        : "LinqUp Privacy and Cookie Policy. Learn how we protect your personal data in accordance with Ukrainian legislation and GDPR.";
+}
+
+<div class="legal-page">
+    <div class="legal-hero">
+        <div class="container">
+            <nav class="legal-breadcrumbs" aria-label="Breadcrumb">
+                <a href="/@culture/">@(culture == "uk" ? "Головна" : "Home")</a>
+                <span class="legal-breadcrumbs-separator" aria-hidden="true">/</span>
+                <span aria-current="page">@(culture == "uk" ? "Політика конфіденційності" : "Privacy Policy")</span>
+            </nav>
+
+            <h1 class="legal-hero-title">
+                @(culture == "uk" 
+                    ? "Політика конфіденційності та файлів cookie" 
+                    : "Privacy & Cookie Policy")
+            </h1>
+            <p class="legal-hero-lead">
+                @(culture == "uk"
+                    ? "Ми поважаємо вашу приватність і прагнемо бути максимально відкритими. Цей документ детально роз'яснює, які дані збирає LinqUp, навіщо ми це робимо, як гарантуємо безпеку та якими є ваші права."
+                    : "We value your privacy and believe in complete transparency. This document details what personal data LinqUp collects, why we process it, how we protect it, and what your rights are.")
+            </p>
+
+            <div class="legal-meta-bar">
+                <div class="legal-badges">
+                    <span class="legal-badge legal-badge--active">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                        @(culture == "uk" ? "v1.0 • Чинна редакція" : "v1.0 • Current Version")
+                    </span>
+                    <span class="legal-badge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        @(culture == "uk" ? "16 вересня 2026 р." : "September 16, 2026")
+                    </span>
+                    <span class="legal-badge legal-badge--info">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        @(culture == "uk" ? "~8 хв читання" : "~8 min read")
+                    </span>
+                </div>
+
+                <div class="legal-actions">
+                    <button type="button" class="legal-action-btn" id="btn-print-doc" aria-label="Print document">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        <span>@(culture == "uk" ? "Друкувати" : "Print")</span>
+                    </button>
+                    <button type="button" class="legal-action-btn" id="btn-copy-link" aria-label="Copy document link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        <span id="btn-copy-text">@(culture == "uk" ? "Копіювати лінк" : "Copy Link")</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Quick Jump Pills for Mobile / Tablets -->
+        <div class="legal-mobile-pills" aria-label="Quick Section Navigation">
+            <a href="#section-1" class="legal-pill-link">01. @(culture == "uk" ? "Контролер" : "Controller")</a>
+            <a href="#section-2" class="legal-pill-link">02. @(culture == "uk" ? "Дані" : "Data")</a>
+            <a href="#section-3" class="legal-pill-link">03. @(culture == "uk" ? "Підстави" : "Bases")</a>
+            <a href="#cookies" class="legal-pill-link">04. @(culture == "uk" ? "Файли Cookie" : "Cookies")</a>
+            <a href="#section-5" class="legal-pill-link">05. @(culture == "uk" ? "Передача" : "Sharing")</a>
+            <a href="#section-6" class="legal-pill-link">06. @(culture == "uk" ? "Безпека" : "Security")</a>
+            <a href="#section-7" class="legal-pill-link">07. @(culture == "uk" ? "Ваші права" : "Your Rights")</a>
+            <a href="#section-8" class="legal-pill-link">08. @(culture == "uk" ? "Неповнолітні" : "Minors")</a>
+            <a href="#section-9" class="legal-pill-link">09. @(culture == "uk" ? "Зміни" : "Updates")</a>
+            <a href="#section-10" class="legal-pill-link">10. @(culture == "uk" ? "Контакти" : "Contacts")</a>
+        </div>
+
+        <div class="legal-layout">
+            <!-- Desktop Sticky Table of Contents -->
+            <aside class="legal-toc-aside" aria-label="Table of contents">
+                <div class="legal-toc-card">
+                    <div class="legal-toc-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        @(culture == "uk" ? "Зміст політики" : "Contents")
+                    </div>
+                    <ul class="legal-toc-list">
+                        <li class="legal-toc-item"><a href="#section-1" class="legal-toc-link">1. @(culture == "uk" ? "Загальні положення та Контролер" : "General Provisions & Controller")</a></li>
+                        <li class="legal-toc-item"><a href="#section-2" class="legal-toc-link">2. @(culture == "uk" ? "Категорії персональних даних" : "Categories of Personal Data")</a></li>
+                        <li class="legal-toc-item"><a href="#section-3" class="legal-toc-link">3. @(culture == "uk" ? "Цілі та правові підстави обробки" : "Purposes & Legal Bases")</a></li>
+                        <li class="legal-toc-item"><a href="#cookies" class="legal-toc-link">4. @(culture == "uk" ? "Політика щодо файлів cookie" : "Cookie Policy")</a></li>
+                        <li class="legal-toc-item"><a href="#section-5" class="legal-toc-link">5. @(culture == "uk" ? "Розкриття та субпроцесори" : "Data Sharing & Sub-processors")</a></li>
+                        <li class="legal-toc-item"><a href="#section-6" class="legal-toc-link">6. @(culture == "uk" ? "Зберігання та кібербезпека" : "Retention & Cyber Security")</a></li>
+                        <li class="legal-toc-item"><a href="#section-7" class="legal-toc-link">7. @(culture == "uk" ? "Ваші права як суб'єкта даних" : "Your Rights under GDPR & Law")</a></li>
+                        <li class="legal-toc-item"><a href="#section-8" class="legal-toc-link">8. @(culture == "uk" ? "Захист неповнолітніх" : "Children's Privacy")</a></li>
+                        <li class="legal-toc-item"><a href="#section-9" class="legal-toc-link">9. @(culture == "uk" ? "Зміни до Політики" : "Changes to this Policy")</a></li>
+                        <li class="legal-toc-item"><a href="#section-10" class="legal-toc-link">10. @(culture == "uk" ? "Контакти та наглядові органи" : "Contacts & Supervisory Body")</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Main Legal Article -->
+            <article class="legal-article">
+                @if (culture == "uk")
+                {
+                    <!-- Section 1: General & Controller -->
+                    <section class="legal-section" id="section-1">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">01</span>
+                            <h2 class="legal-section-title">Загальні положення та хто ми є</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>LinqUp — це платформа для об'єднання українських студентів у команди для проєктів та хакатонів. Ми є володільцем (контролером) ваших даних і обробляємо їх відкрито, виключно для функціонування сервісу.</p>
+                        </div>
+                        <p>Ця Політика конфіденційності (надалі — «Політика») регулює порядок збирання, використання, зберігання, захисту та розкриття персональних даних користувачів платформи <strong>LinqUp</strong> (доступної за веб-адресою linqup.ua та її субдоменами).</p>
+                        <p>Відповідно до Закону України «Про захист персональних даних» (№ 2297-VI) та Загального регламенту захисту даних ЄС (General Data Protection Regulation 2016/679, надалі — «GDPR»), контролером (володільцем) персональних даних є:</p>
+                        <ul>
+                            <li><strong>Організація / Команда:</strong> LinqUp Project Team</li>
+                            <li><strong>Місцезнаходження:</strong> бул. Івана Газюка, 8А, м. Луцьк, Волинська область, Україна, 43000</li>
+                            <li><strong>Електронна пошта підтримки та DPO:</strong> <a href="mailto:support@linqup.ua">support@linqup.ua</a></li>
+                            <li><strong>Телефон:</strong> <a href="tel:+380501013485">+380 95 037 22 86</a></li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 2: Data Categories -->
+                    <section class="legal-section" id="section-2">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">02</span>
+                            <h2 class="legal-section-title">Категорії персональних даних, які ми збираємо</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>Ми збираємо лише ті дані, які необхідні вам для створення профілю, демонстрації навичок та безпечного входу: ім'я, email, нікнейм, технологічний стек, університет та технічну інформацію про сесії.</p>
+                        </div>
+                        <p>Ми обмежуємо обсяг зібраних персональних даних принципом мінімізації (Data Minimization). Перелік категорій наведено нижче:</p>
+
+                        <div class="legal-table-wrapper">
+                            <table class="legal-table">
+                                <thead>
+                                    <tr>
+                                        <th>Категорія</th>
+                                        <th>Склад даних</th>
+                                        <th>Джерело надходження</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Дані облікового запису</strong></td>
+                                        <td>Ім’я, прізвище, унікальний нікнейм (username), адреса електронної пошти, криптографічно гешований пароль (Identity PBKDF2/Argon2).</td>
+                                        <td>Вказуються користувачем під час реєстрації.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Дані публічного профілю</strong></td>
+                                        <td>Біографія (bio), фото/аватар, заклад вищої освіти (університет), перелік професійних навичок (UserSkills), посилання на зовнішні профілі (Telegram, Discord, LinkedIn, GitHub).</td>
+                                        <td>Заповнюються за власним бажанням у розділі профілю.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Технічні дані та сесії</strong></td>
+                                        <td>IP-адреса, ідентифікатор сесії (UserSession), тип браузера та версія операційної системи (User-Agent), часові мітки створення сесій та активності.</td>
+                                        <td>Фіксуються автоматично сервером для контролю безпеки входу.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Комунікаційні дані</strong></td>
+                                        <td>Повідомлення та запити, надіслані через форму зворотного зв'язку на сайті або на support@linqup.ua.</td>
+                                        <td>Формуються користувачем при зверненні до платформи.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p><strong>Зверніть увагу:</strong> Платформа LinqUp <em>не збирає та не обробляє</em> чутливі персональні дані (ст. 9 GDPR), такі як расове чи етнічне походження, політичні погляди, релігійні переконання чи медичні дані.</p>
+                    </section>
+
+                    <!-- Section 3: Purposes & Legal Bases -->
+                    <section class="legal-section" id="section-3">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">03</span>
+                            <h2 class="legal-section-title">Цілі та правові підстави обробки даних</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>Ми обробляємо інформацію законно: щоб виконувати угоду про надання послуг сервісу (матчинг команд), підтримувати кіберзахист системи та надсилати важливі сповіщення.</p>
+                        </div>
+                        <p>Відповідно до статті 6 GDPR та статті 11 Закону України «Про захист персональних даних», обробка здійснюється на таких правових підставах:</p>
+                        <ul>
+                            <li><strong>Виконання договору (Умов використання) — ст. 6(1)(b) GDPR:</strong> створення та обслуговування облікового запису, надання можливості шукати однодумців за навичками (LinqUp Match), взаємодія між учасниками студентських команд.</li>
+                            <li><strong>Законний інтерес (Legitimate Interest) — ст. 6(1)(f) GDPR:</strong> запобігання спаму, захист облікових записів від несанкціонованого доступу, ведення журналу сесій у розділі Security, аналіз продуктивності та покращення UI/UX платформи.</li>
+                            <li><strong>Згода суб'єкта даних — ст. 6(1)(a) GDPR:</strong> обробка необов'язкових полів профілю (соціальні контакти, додаткові навички) та використання функціональних файлів cookie.</li>
+                            <li><strong>Виконання юридичних зобов'язань — ст. 6(1)(c) GDPR:</strong> розгляд офіційних запитів правоохоронних або судових органів відповідно до законодавства України.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 4: Cookie Policy -->
+                    <section class="legal-section" id="cookies">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">04</span>
+                            <h2 class="legal-section-title">Політика щодо файлів cookie та локального сховища (Cookie Policy)</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>Файли cookie та LocalStorage використовуються для коректної роботи сайту: збереження обраної мови (українська/англійська), теми інтерфейсу, безпечної авторизації та захисту форм від атак.</p>
+                        </div>
+                        <p>Файли cookie — це невеликі текстові файли, які веб-сайт зберігає на вашому пристрої під час перегляду сторінок. Ми також використовуємо HTML5 LocalStorage для зберігання локальних налаштувань інтерфейсу.</p>
+                        
+                        <h3>Класифікація файлів cookie платформи LinqUp</h3>
+                        <div class="legal-table-wrapper">
+                            <table class="legal-table">
+                                <thead>
+                                    <tr>
+                                        <th>Назва / Ключ</th>
+                                        <th>Тип & Провайдер</th>
+                                        <th>Категорія</th>
+                                        <th>Термін зберігання</th>
+                                        <th>Призначення</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">linqup_culture</span></td>
+                                        <td>HTTP Cookie (LinqUp)</td>
+                                        <td>Суворо необхідні (Essential)</td>
+                                        <td>1 рік</td>
+                                        <td>Зберігає мовну перевагу користувача (<code class="code-inline">uk</code> або <code class="code-inline">en</code>) для консистентного рендерингу сторінок на сервері.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">.AspNetCore.Antiforgery.*</span></td>
+                                        <td>HTTP Cookie (LinqUp)</td>
+                                        <td>Суворо необхідні (Безпека)</td>
+                                        <td>Сесійний (до закриття)</td>
+                                        <td>Криптографічний захист веб-форм від атак підробки міжсайтових запитів (CSRF).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">linqup_token</span> / Сесія</td>
+                                        <td>HTTP / Local (LinqUp)</td>
+                                        <td>Суворо необхідні (Автентифікація)</td>
+                                        <td>Тривалість сесії</td>
+                                        <td>Забезпечує захищений авторизований сеанс зв'язку між браузером та LinqUp API.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">linqup_theme</span></td>
+                                        <td>LocalStorage (Браузер)</td>
+                                        <td>Функціональні (Preferences)</td>
+                                        <td>Постійно (до скидання)</td>
+                                        <td>Зберігає колірну тему оформлення: темна (<code class="code-inline">dark</code>) або світла (<code class="code-inline">light</code>).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">linqup_lang</span></td>
+                                        <td>LocalStorage (Браузер)</td>
+                                        <td>Функціональні (Preferences)</td>
+                                        <td>Постійно (до скидання)</td>
+                                        <td>Клієнтська синхронізація локалізації для динамічних компонентів JavaScript.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">Google Maps (Embed)</span></td>
+                                        <td>Iframe Cookie (Google LLC)</td>
+                                        <td>Функціональні (Сторонні)</td>
+                                        <td>Згідно з політикою Google</td>
+                                        <td>Відображення інтерактивної мапи розташування офісу команди LinqUp у м. Луцьк.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>Як керувати або вимкнути файли cookie</h3>
+                        <p>Більшість веб-браузерів дозволяють переглядати, видаляти та блокувати збереження файлів cookie в меню налаштувань. Інструкції для найпопулярніших браузерів:</p>
+                        <ul>
+                            <li><strong>Google Chrome:</strong> Налаштування → Конфіденційність і безпека → Сторонні файли cookie.</li>
+                            <li><strong>Mozilla Firefox:</strong> Налаштування → Приватність і безпека → Файли cookie і дані сайтів.</li>
+                            <li><strong>Apple Safari:</strong> Параметри → Приватність → Керування даними веб-сайту.</li>
+                            <li><strong>Microsoft Edge:</strong> Налаштування → Дозволи для сайтів → Файли cookie та збережені дані.</li>
+                        </ul>
+                        <div class="legal-alert legal-alert--warning">
+                            <strong>Важливо:</strong> Вимкнення суворо необхідних файлів cookie (таких як мовний cookie чи CSRF-токен) може призвести до неможливості успішного входу в систему або некоректної роботи інтерактивних форм.
+                        </div>
+                    </section>
+
+                    <!-- Section 5: Data Sharing & Sub-processors -->
+                    <section class="legal-section" id="section-5">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">05</span>
+                            <h2 class="legal-section-title">Розкриття даних та субпроцесори</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>LinqUp НІКОЛИ не продає ваші дані рекламним мережам або брокерам даних. Ми співпрацюємо виключно з перевіреними технічними субпроцесорами для забезпечення хостингу та доставки системних повідомлень.</p>
+                        </div>
+                        <p>Для функціонування платформи ми залучаємо надійних партнерів (субпроцесорів), які забезпечують виконання контрактних вимог щодо безпеки даних (Data Processing Addendum):</p>
+                        <ul>
+                            <li><strong>Хостинг-інфраструктура та СУБД:</strong> хмарні сервери в межах Європейського Союзу / України, що мають сертифікацію ISO/IEC 27001 та повну відповідність GDPR.</li>
+                            <li><strong>Поштовий сервіс Resend:</strong> надсилання транзакційних листів, підтвердження пошти та сповіщень безпеки.</li>
+                            <li><strong>Google Maps API (Google Ireland Limited):</strong> показ інтерактивної мапи офісу LinqUp.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 6: Retention & Cyber Security -->
+                    <section class="legal-section" id="section-6">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">06</span>
+                            <h2 class="legal-section-title">Зберігання даних та заходи кібербезпеки</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>Усі дані передаються через зашифрований канал TLS 1.3, паролі надійно хешуються, а ви маєте повний контроль над активними сесіями у розділі Security з можливістю їх віддаленого завершення.</p>
+                        </div>
+                        <p>Ми впроваджуємо багаторівневий комплекс організаційно-технічних заходів безпеки (Security by Design):</p>
+                        <ul>
+                            <li><strong>Шифрування трафіку:</strong> весь мережевий трафік шифрується протоколом TLS 1.3 за допомогою сучасних криптографічних шифронаборів.</li>
+                            <li><strong>Криптографічний захист паролів:</strong> паролі користувачів ніколи не зберігаються у відкритому вигляді; вони хешуються за допомогою стійких алгоритмів з унікальною сіллю (Salt).</li>
+                            <li><strong>Керування сесіями в реальному часі:</strong> у розділі <em>Security</em> ви можете бачити всі авторизовані сесії (IP-адресу, місто, пристрій) та миттєво відкликати підозрілі сесії одним кліком.</li>
+                            <li><strong>Строки зберігання:</strong> дані зберігаються протягом усього часу існування вашого облікового запису. У разі видалення профілю дані видаляються протягом 30 календарних днів (за винятком резервних копій, що перезаписуються за стандартним циклом до 60 днів).</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 7: Data Subject Rights -->
+                    <section class="legal-section" id="section-7">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">07</span>
+                            <h2 class="legal-section-title">Ваші права як суб'єкта персональних даних</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>Ви маєте повний контроль над своїми даними: право переглядати їх, змінювати, експортувати чи вимагати повного видалення («право на забуття») у будь-який момент.</p>
+                        </div>
+                        <p>Відповідно до статті 8 Закону України «Про захист персональних даних» та статей 15–22 Регламенту GDPR, ви маєте такі права:</p>
+                        <ol>
+                            <li><strong>Право на доступ (Right of Access):</strong> отримати підтвердження факту обробки ваших даних та копію всієї збереженої інформації.</li>
+                            <li><strong>Право на виправлення (Right to Rectification):</strong> оновити неточні, неповні чи застарілі дані у вашому особистому кабінеті.</li>
+                            <li><strong>Право на видалення («Право бути забутим» / Right to Erasure):</strong> вимагати повного видалення вашого акаунта та всієї пов'язаної персональної інформації.</li>
+                            <li><strong>Право на обмеження обробки (Right to Restriction):</strong> тимчасово призупинити обробку даних на час розгляду правових претензій.</li>
+                            <li><strong>Право на мобільність даних (Data Portability):</strong> отримати свої персональні дані у структурованому, загальновживаному машинозчитуваному форматі (JSON/CSV).</li>
+                            <li><strong>Право на заперечення (Right to Object):</strong> заперечити проти обробки даних, що здійснюється на підставі законного інтересу.</li>
+                            <li><strong>Право відкликати згоду:</strong> відкликати попередньо надану згоду на обробку необов'язкових відомостей.</li>
+                        </ol>
+                        <p>Щоб реалізувати будь-яке з цих прав, надішліть письмовий запит на нашу адресу: <a href="mailto:support@linqup.ua">support@linqup.ua</a>. Ми опрацюємо ваш запит протягом <strong>30 календарних днів</strong> безкоштовно.</p>
+                    </section>
+
+                    <!-- Section 8: Children's Privacy -->
+                    <section class="legal-section" id="section-8">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">08</span>
+                            <h2 class="legal-section-title">Захист конфіденційності неповнолітніх</h2>
+                        </div>
+                        <p>Сервіс LinqUp призначений для студентів закладів вищої, фахової передвищої освіти та осіб, віком від <strong>16 років</strong>. Ми свідомо не збираємо та не запитуємо персональні дані осіб молодше 16 років без згоди батьків чи офіційних опікунів. Якщо нам стане відомо про реєстрацію особи молодше 16 років без належної згоди, ми негайно видалимо відповідні дані.</p>
+                    </section>
+
+                    <!-- Section 9: Changes to Policy -->
+                    <section class="legal-section" id="section-9">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">09</span>
+                            <h2 class="legal-section-title">Зміни до Політики конфіденційності</h2>
+                        </div>
+                        <p>Ми періодично переглядаємо цю Політику для забезпечення відповідності нововведенням у законодавстві та розвитку функціоналу LinqUp. У разі суттєвих змін ми попередимо вас електронною поштою або через оголошення на веб-сайті не менш ніж за 14 днів до набрання ними чинності. Дата останнього оновлення вказується у верхній частині цієї сторінки.</p>
+                    </section>
+
+                    <!-- Section 10: Contacts & Authorities -->
+                    <section class="legal-section" id="section-10">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">10</span>
+                            <h2 class="legal-section-title">Контакти та наглядові органи</h2>
+                        </div>
+                        <p>Якщо у вас виникли запитання, пропозиції або скарги щодо цієї Політики чи обробки ваших персональних даних, зв'яжіться з нашою командою:</p>
+
+                        <div class="legal-contact-card">
+                            <div class="legal-contact-grid">
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Служба підтримки</span>
+                                    <span class="legal-contact-value"><a href="mailto:support@linqup.ua">support@linqup.ua</a></span>
+                                </div>
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Контактний телефон</span>
+                                    <span class="legal-contact-value"><a href="tel:+380501013485">+380 95 037 22 86</a></span>
+                                </div>
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Поштова адреса</span>
+                                    <span class="legal-contact-value">бул. Івана Газюка, 8А, м. Луцьк, Україна</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p>Ви також маєте законне право звернутися зі скаргою до державного органу нагляду за додержанням законодавства про захист персональних даних в Україні:</p>
+                        <p><strong>Уповноважений Верховної Ради України з прав людини</strong><br />
+                        Адреса: вул. Інститутська, 21/8, м. Київ, 01008<br />
+                        Електронна пошта: <a href="mailto:hotline@ombudsman.gov.ua">hotline@ombudsman.gov.ua</a><br />
+                        Гаряча лінія: 0 800 50 17 20</p>
+                    </section>
+                }
+                else
+                {
+                    <!-- English Version -->
+                    <!-- Section 1: General & Controller -->
+                    <section class="legal-section" id="section-1">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">01</span>
+                            <h2 class="legal-section-title">General Provisions & Data Controller</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Key Takeaway
+                            </div>
+                            <p>LinqUp is a platform for Ukrainian students to unite and build project teams. We act as the Data Controller and process your information transparently and solely to deliver and secure our services.</p>
+                        </div>
+                        <p>This Privacy Policy (hereinafter referred to as the "Policy") governs how <strong>LinqUp</strong> collects, uses, stores, and protects personal data obtained from users of the LinqUp web platform.</p>
+                        <p>Under the Law of Ukraine "On Personal Data Protection" (No. 2297-VI) and the General Data Protection Regulation (EU GDPR 2016/679), the Data Controller is:</p>
+                        <ul>
+                            <li><strong>Organization / Project:</strong> LinqUp Project Team</li>
+                            <li><strong>Physical Office:</strong> Ivana Haziuka Blvd, 8A, Lutsk, Volyn Oblast, Ukraine, 43000</li>
+                            <li><strong>Support & DPO Email:</strong> <a href="mailto:support@linqup.ua">support@linqup.ua</a></li>
+                            <li><strong>Phone:</strong> <a href="tel:+380501013485">+380 95 037 22 86</a></li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 2: Data Categories -->
+                    <section class="legal-section" id="section-2">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">02</span>
+                            <h2 class="legal-section-title">Categories of Personal Data We Collect</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Key Takeaway
+                            </div>
+                            <p>We only collect data strictly necessary to build your profile, showcase your skills, and keep your login secure: your name, email, nickname, tech stack, university, and session security telemetry.</p>
+                        </div>
+                        <div class="legal-table-wrapper">
+                            <table class="legal-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Data Elements</th>
+                                        <th>Source</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Account Credentials</strong></td>
+                                        <td>First name, last name, unique lowercase nickname, email address, cryptographically hashed password (Identity PBKDF2/Argon2).</td>
+                                        <td>Provided by the user upon registration.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Public Profile Information</strong></td>
+                                        <td>Bio, avatar/profile picture, university/college, tech stack and skills (UserSkills), social links (Telegram, Discord, LinkedIn, GitHub).</td>
+                                        <td>Voluntarily added in your profile settings.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Session & Telemetry Data</strong></td>
+                                        <td>IP address, session identifier (UserSession), browser type & OS (User-Agent), login timestamps, and session status.</td>
+                                        <td>Automatically logged by the server for security auditing.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Support Correspondence</strong></td>
+                                        <td>Feedback form messages and emails sent to support@linqup.ua.</td>
+                                        <td>Sent directly by the user.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Section 3: Purposes & Legal Bases -->
+                    <section class="legal-section" id="section-3">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">03</span>
+                            <h2 class="legal-section-title">Purposes & Legal Bases for Processing</h2>
+                        </div>
+                        <p>Under Article 6 of the GDPR and Article 11 of the Ukrainian Personal Data Protection Law, we process personal data based on the following grounds:</p>
+                        <ul>
+                            <li><strong>Contractual Necessity — Art. 6(1)(b) GDPR:</strong> To provide account registration, match you with relevant teammates via LinqUp Match, and enable student collaboration.</li>
+                            <li><strong>Legitimate Interests — Art. 6(1)(f) GDPR:</strong> To safeguard the platform against unauthorized intrusion, mitigate spam, monitor active sessions, and enhance interface reliability.</li>
+                            <li><strong>Consent — Art. 6(1)(a) GDPR:</strong> For optional profile enhancements (public contact links, custom skill tags) and non-essential preferences.</li>
+                            <li><strong>Legal Obligations — Art. 6(1)(c) GDPR:</strong> To respond to lawful requests by competent judicial authorities.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 4: Cookie Policy -->
+                    <section class="legal-section" id="cookies">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">04</span>
+                            <h2 class="legal-section-title">Cookie & Local Storage Policy</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Key Takeaway
+                            </div>
+                            <p>Cookies and LocalStorage are used to maintain your selected language (uk/en), color theme preference, secure session authentication, and protection against CSRF attacks.</p>
+                        </div>
+                        <p>Cookies are small files placed on your computer or mobile device. Below is a comprehensive list of cookies and storage keys utilized on LinqUp:</p>
+                        
+                        <div class="legal-table-wrapper">
+                            <table class="legal-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name / Key</th>
+                                        <th>Type & Origin</th>
+                                        <th>Category</th>
+                                        <th>Lifespan</th>
+                                        <th>Purpose</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">linqup_culture</span></td>
+                                        <td>HTTP Cookie (LinqUp)</td>
+                                        <td>Strictly Necessary</td>
+                                        <td>1 Year</td>
+                                        <td>Remembers your preferred language (<code class="code-inline">uk</code> or <code class="code-inline">en</code>) for SSR page routing.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">.AspNetCore.Antiforgery.*</span></td>
+                                        <td>HTTP Cookie (LinqUp)</td>
+                                        <td>Strictly Necessary (Security)</td>
+                                        <td>Session</td>
+                                        <td>Protects form submissions against Cross-Site Request Forgery (CSRF) exploits.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">linqup_token</span> / Session</td>
+                                        <td>HTTP / Local (LinqUp)</td>
+                                        <td>Strictly Necessary (Auth)</td>
+                                        <td>Session duration</td>
+                                        <td>Maintains authenticated state and permits secure session validation with LinqUp API.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">linqup_theme</span></td>
+                                        <td>LocalStorage (Client)</td>
+                                        <td>Functional (Preferences)</td>
+                                        <td>Persistent</td>
+                                        <td>Stores your UI theme mode preference (<code class="code-inline">dark</code> or <code class="code-inline">light</code>).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">linqup_lang</span></td>
+                                        <td>LocalStorage (Client)</td>
+                                        <td>Functional (Preferences)</td>
+                                        <td>Persistent</td>
+                                        <td>Client-side fallback synchronization for interface translations.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="legal-cookie-name">Google Maps Embed</span></td>
+                                        <td>Iframe Cookie (Google LLC)</td>
+                                        <td>Functional (Third-party)</td>
+                                        <td>Google Policy</td>
+                                        <td>Embeds an interactive map showcasing LinqUp's campus presence in Lutsk.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h3>Managing Cookie Preferences</h3>
+                        <p>You can configure your browser to block or alert you about cookies. Please refer to your browser documentation (Google Chrome, Firefox, Safari, Edge). Note that disabling essential cookies may impact authentication and security functions.</p>
+                    </section>
+
+                    <!-- Section 5: Data Sharing & Sub-processors -->
+                    <section class="legal-section" id="section-5">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">05</span>
+                            <h2 class="legal-section-title">Data Sharing & Sub-processors</h2>
+                        </div>
+                        <p><strong>We never sell, rent, or trade your personal data.</strong> We only engage vetted service providers bound by strict confidentiality and data protection agreements:</p>
+                        <ul>
+                            <li><strong>Cloud Infrastructure:</strong> ISO/IEC 27001 compliant cloud servers located within the EU / Ukraine.</li>
+                            <li><strong>Resend Email Delivery:</strong> Secure delivery of verification codes and password recovery emails.</li>
+                            <li><strong>Google Ireland Limited:</strong> Interactive office map embedding.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 6: Retention & Cyber Security -->
+                    <section class="legal-section" id="section-6">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">06</span>
+                            <h2 class="legal-section-title">Data Retention & Cyber Security</h2>
+                        </div>
+                        <p>We deploy robust security safeguards:</p>
+                        <ul>
+                            <li><strong>TLS 1.3 Encryption:</strong> All client-server communications are encrypted in transit.</li>
+                            <li><strong>Password Hashing:</strong> Strong salted password hashing algorithms; plain text passwords are never stored.</li>
+                            <li><strong>Active Session Management:</strong> Monitor logged-in devices in your Security settings and remotely revoke sessions with a single click.</li>
+                            <li><strong>Retention Period:</strong> Data is kept as long as your account remains active. Upon deletion, data is removed within 30 days.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 7: Data Subject Rights -->
+                    <section class="legal-section" id="section-7">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">07</span>
+                            <h2 class="legal-section-title">Your Rights under GDPR & Ukrainian Law</h2>
+                        </div>
+                        <p>You are entitled to exercise the following rights:</p>
+                        <ol>
+                            <li><strong>Right of Access:</strong> Request a copy of your stored personal data.</li>
+                            <li><strong>Right to Rectification:</strong> Edit and correct incomplete or outdated profile data.</li>
+                            <li><strong>Right to Erasure ("Right to be Forgotten"):</strong> Request full deletion of your profile and data.</li>
+                            <li><strong>Right to Restrict Processing:</strong> Pause processing under certain legal conditions.</li>
+                            <li><strong>Right to Data Portability:</strong> Receive your data in a portable, structured JSON format.</li>
+                            <li><strong>Right to Object:</strong> Contest processing based on legitimate interests.</li>
+                        </ol>
+                        <p>To exercise any of these rights, contact us at <a href="mailto:support@linqup.ua">support@linqup.ua</a>. We respond within <strong>30 calendar days</strong> at no cost.</p>
+                    </section>
+
+                    <!-- Section 8: Children's Privacy -->
+                    <section class="legal-section" id="section-8">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">08</span>
+                            <h2 class="legal-section-title">Children's Privacy</h2>
+                        </div>
+                        <p>LinqUp is tailored for university, college, and vocational students aged <strong>16 and older</strong>. We do not knowingly collect personal data from individuals under 16 without appropriate parental or guardian consent. If we discover that a user under 16 has registered without authorization, their account will be promptly removed.</p>
+                    </section>
+
+                    <!-- Section 9: Updates -->
+                    <section class="legal-section" id="section-9">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">09</span>
+                            <h2 class="legal-section-title">Changes to this Policy</h2>
+                        </div>
+                        <p>We may update this Policy periodically to reflect enhancements to our platform or revisions in privacy regulations. In case of material changes, notice will be posted on the website or communicated via email at least 14 days prior to taking effect.</p>
+                    </section>
+
+                    <!-- Section 10: Contacts -->
+                    <section class="legal-section" id="section-10">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">10</span>
+                            <h2 class="legal-section-title">Contact Information & Supervisory Authority</h2>
+                        </div>
+                        <div class="legal-contact-card">
+                            <div class="legal-contact-grid">
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Support & Privacy Desk</span>
+                                    <span class="legal-contact-value"><a href="mailto:support@linqup.ua">support@linqup.ua</a></span>
+                                </div>
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Telephone</span>
+                                    <span class="legal-contact-value"><a href="tel:+380501013485">+380 95 037 22 86</a></span>
+                                </div>
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Office Address</span>
+                                    <span class="legal-contact-value">Ivana Haziuka Blvd, 8A, Lutsk, Ukraine</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p>You also maintain the right to lodge a complaint with the national supervisory authority: <strong>The Ukrainian Parliament Commissioner for Human Rights (Ombudsman)</strong>, email: <a href="mailto:hotline@ombudsman.gov.ua">hotline@ombudsman.gov.ua</a>.</p>
+                    </section>
+                }
+            </article>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Print action
+            const printBtn = document.getElementById('btn-print-doc');
+            if (printBtn) {
+                printBtn.addEventListener('click', () => window.print());
+            }
+
+            // Copy Link action
+            const copyBtn = document.getElementById('btn-copy-link');
+            const copyText = document.getElementById('btn-copy-text');
+            if (copyBtn && copyText) {
+                copyBtn.addEventListener('click', async () => {
+                    try {
+                        await navigator.clipboard.writeText(window.location.href);
+                        const originalText = copyText.textContent;
+                        copyText.textContent = '@(culture == "uk" ? "Скопійовано!" : "Copied!")';
+                        setTimeout(() => { copyText.textContent = originalText; }, 2200);
+                    } catch (err) {
+                        console.error('Failed to copy URL', err);
+                    }
+                });
+            }
+
+            // Scroll spy for sticky TOC
+            const sections = document.querySelectorAll('.legal-section');
+            const tocLinks = document.querySelectorAll('.legal-toc-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        tocLinks.forEach((link) => {
+                            const href = link.getAttribute('href');
+                            if (href === `#${id}`) {
+                                link.classList.add('is-active');
+                            } else {
+                                link.classList.remove('is-active');
+                            }
+                        });
+                    }
+                });
+            }, {
+                rootMargin: '-20% 0px -70% 0px'
+            });
+
+            sections.forEach((sec) => observer.observe(sec));
+        });
+    </script>
+}

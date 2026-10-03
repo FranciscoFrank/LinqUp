@@ -1,0 +1,695 @@
+@{
+    var projectId = ViewBag.ProjectId;
+    var culture = ViewContext.RouteData.Values["culture"]?.ToString() ?? "uk";
+    ViewData["Title"] = culture == "uk" ? "Робочий простір команди" : "Team Workspace";
+    Layout = "_AppLayout";
+}
+
+<link rel="stylesheet" href="~/css/team-workspace.css" asp-append-version="true" />
+
+<div class="team-workspace-page" data-project-id="@projectId">
+    <!-- Breadcrumb & Top Bar -->
+    <div class="workspace-topbar">
+        <nav aria-label="breadcrumb">
+            <a href="/@culture/Projects" class="btn btn-ghost btn-sm workspace-back-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="workspace-back-icon">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span data-i18n="teams.backToList">@(culture == "uk" ? "Усі команди" : "All Teams")</span>
+            </a>
+        </nav>
+        <div id="project-header-actions" class="workspace-header-actions"></div>
+    </div>
+
+    <!-- Alert banner -->
+    <div id="workspace-alert" class="alert alert-danger"></div>
+    <div id="workspace-success" class="alert alert-success"></div>
+
+    <!-- Project Overview Hero Header -->
+    <div class="card project-hero-card">
+        <div class="project-hero-glow" aria-hidden="true"></div>
+        <div class="workspace-hero-row">
+            <div class="workspace-hero-brand">
+                <img id="project-logo-img" class="team-hero-logo" alt="Team Logo" style="display:none;" />
+                <div id="project-logo-fallback" class="team-hero-logo-fallback">?</div>
+            </div>
+            <div class="workspace-hero-main">
+                <div class="workspace-hero-title-wrap">
+                    <h1 id="project-title" class="page-title workspace-hero-title">&nbsp;</h1>
+                    <span id="project-status-badge" class="badge badge-primary">Recruiting</span>
+                    <span id="project-match-badge" class="badge badge-success team-match-badge" style="display:none;"></span>
+                </div>
+                <p id="project-description" class="workspace-project-desc">&nbsp;</p>
+                <div id="project-skills-list" class="workspace-skills-list"></div>
+            </div>
+            <div class="workspace-stats-col">
+                <div class="workspace-stats-label" data-i18n="teams.teamSize">@(culture == "uk" ? "Склад команди" : "Team Members")</div>
+                <div id="project-members-count" class="workspace-members-count">- / -</div>
+                <div id="project-membership-state"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Discord & Telegram Style Workspace Shell -->
+    <div class="workspace-shell">
+        
+        <!-- Left Sidebar: Channels & Navigation -->
+        <aside class="workspace-sidebar">
+            <div class="sidebar-project-header">
+                <img id="sidebar-project-logo" class="sidebar-project-avatar" alt="Team Logo" style="display:none;" />
+                <div id="sidebar-project-fallback" class="sidebar-project-avatar-fallback">?</div>
+                <div class="sidebar-project-header-text">
+                    <div class="sidebar-project-title" id="sidebar-project-title">Команда</div>
+                    <div class="sidebar-project-meta" id="sidebar-project-meta">Робочий простір</div>
+                </div>
+            </div>
+
+            <!-- Active Video Meeting Banner in Sidebar -->
+            <div id="sidebar-meeting-alert" class="sidebar-meeting-alert" title="@(culture == "uk" ? "Триває дзвінок — натисніть щоб приєднатись" : "Active call — click to join")">
+                <div class="sidebar-meeting-alert-text">
+                    <span class="sidebar-meeting-dot"></span>
+                    <span>@(culture == "uk" ? "Триває дзвінок" : "Active Call")</span>
+                </div>
+                <span class="badge badge-danger sidebar-meeting-badge">@(culture == "uk" ? "Вхід" : "Join")</span>
+            </div>
+
+            <div class="sidebar-channels-list">
+                <div class="sidebar-category-header" data-i18n="workspace.channels">@(culture == "uk" ? "Канали" : "Channels")</div>
+                
+                <!-- Chat Channel Nav Button -->
+                <button type="button" class="workspace-nav-btn is-active" data-view="chat">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    <span data-i18n="workspace.teamChat">@(culture == "uk" ? "Командний чат" : "Team Chat")</span>
+                </button>
+
+                <!-- GitHub Repo Nav Button -->
+                <button type="button" class="workspace-nav-btn" data-view="github">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                    </svg>
+                    <span>GitHub</span>
+                    <span class="workspace-nav-badge" id="sidebar-git-badge">Repo</span>
+                </button>
+
+                <!-- LiveKit Meets Nav Button -->
+                <button type="button" class="workspace-nav-btn" data-view="meeting">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="23 7 16 12 23 17 23 7"></polygon>
+                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                    </svg>
+                    <span data-i18n="workspace.videoMeets">@(culture == "uk" ? "Відеозустріч (Meets)" : "Video Meets")</span>
+                </button>
+
+                <div class="sidebar-category-header sidebar-category-header--management" data-i18n="workspace.managementCategory">@(culture == "uk" ? "Склад та управління" : "Team & Roster")</div>
+
+                <!-- Members Roster Nav Button -->
+                <button type="button" class="workspace-nav-btn" data-view="members">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span data-i18n="teams.teamMembers">@(culture == "uk" ? "Учасники та заявки" : "Members & Requests")</span>
+                </button>
+            </div>
+
+            <!-- Discord Style Bottom User Info -->
+            <div class="sidebar-bottom-user">
+                <div class="sidebar-user-status">
+                    <div class="online-indicator" title="Онлайн"></div>
+                    <span class="sidebar-workspace-label">LinqUp Workspace</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Panels (Tabbed Views) -->
+        <main class="workspace-content">
+            
+            <!-- ===================================================================
+                 VIEW 1: DISCORD / TELEGRAM STYLE TEAM MESSENGER
+                 =================================================================== -->
+            <div id="view-chat" class="workspace-tab-view is-active">
+                <div class="chat-container-upgraded" id="chat-container">
+                    
+                    <!-- Chat Header Bar -->
+                    <div class="chat-header-bar">
+                        <div class="chat-header-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="4" y1="9" x2="20" y2="9"></line>
+                                <line x1="4" y1="15" x2="20" y2="15"></line>
+                                <line x1="10" y1="3" x2="8" y2="21"></line>
+                                <line x1="16" y1="3" x2="14" y2="21"></line>
+                            </svg>
+                            <div>
+                                <div class="chat-channel-title" data-i18n="chat.channelTitle">@(culture == "uk" ? "командний-чат" : "team-chat")</div>
+                                <div id="chat-typing-indicator" class="chat-typing-indicator"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <span id="chat-connection-status" class="badge badge-success chat-conn-badge" data-i18n="chat.connected">@(culture == "uk" ? "З'єднано" : "Connected")</span>
+                        </div>
+                    </div>
+
+                    <!-- Chat Non-member Overlay -->
+                    <div id="chat-lock-overlay" class="chat-lock-overlay">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="chat-lock-icon">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                        <h3 class="chat-lock-title" data-i18n="chat.lockedTitle">@(culture == "uk" ? "Чат доступний лише учасникам команди" : "Chat is only available to team members")</h3>
+                        <p class="chat-lock-subtitle" data-i18n="chat.lockedSubtitle">
+                            @(culture == "uk" ? "Подайте заявку на приєднання до команди, щоб отримати доступ до обговорень, цитування коду та спільних зустрічей." : "Apply to join the team to get access to discussions, code quoting, and video meetings.")
+                        </p>
+                        <button type="button" class="btn btn-primary" id="open-join-modal-overlay-btn" data-i18n="teams.applyToJoin">
+                            @(culture == "uk" ? "Подати заявку на вступ" : "Apply to Join")
+                        </button>
+                    </div>
+
+                    <!-- Messages Feed Container -->
+                    <div class="chat-messages-container" id="chat-messages">
+                        <div id="chat-load-more" class="chat-load-more">
+                            <button type="button" class="btn btn-ghost btn-sm" id="load-earlier-messages-btn" data-i18n="chat.loadEarlier">
+                                @(culture == "uk" ? "Завантажити попередні повідомлення" : "Load earlier messages")
+                            </button>
+                        </div>
+                        <div id="chat-messages-list" class="chat-messages-list"></div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="chat-input-area">
+                        
+                        <!-- Mentions Popup -->
+                        <div id="mentions-popup" class="mentions-popup">
+                            <div class="mentions-header" data-i18n="chat.mentionsTitle">
+                                @(culture == "uk" ? "Учасники команди" : "Team Members")
+                            </div>
+                            <div id="mentions-list"></div>
+                        </div>
+
+                        <!-- Draft Code Quote Bar (when quoted from GitHub) -->
+                        <div id="chat-draft-bar" class="chat-draft-bar">
+                            <div class="chat-draft-info">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--color-brand)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                                <span id="chat-draft-text" class="chat-draft-text"></span>
+                            </div>
+                            <button type="button" class="chat-draft-cancel" id="chat-draft-cancel-btn" title="Скасувати цитування">&times;</button>
+                        </div>
+
+                        <!-- Attached Files Pre-send Bar -->
+                        <div id="chat-pending-attachments" class="pending-attachments-bar"></div>
+
+                        <!-- Input form -->
+                        <form id="chat-send-form" class="chat-send-form" onsubmit="return false;">
+                            <input type="file" id="chat-file-input" class="chat-file-input" multiple accept="image/*,.pdf,.doc,.docx,.zip,.rar,.7z,.tar,.gz,.txt,.json,.cs,.py,.ts,.js,.md,.csv,.xlsx,.pptx" />
+                            
+                            <button type="button" class="btn btn-ghost btn-icon" id="chat-attach-btn" title="@(culture == "uk" ? "Прикріпити файл або фото" : "Attach file or photo")" aria-label="@(culture == "uk" ? "Прикріпити файл або фото" : "Attach file or photo")" data-i18n-title="chat.attachFile">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                                </svg>
+                            </button>
+
+                            <div class="chat-input-wrapper">
+                                <textarea id="chat-message-input" class="input chat-textarea" rows="1" placeholder="@(culture == "uk" ? "Напишіть повідомлення... (введіть @ щоб тегнути когось)" : "Write a message... (type @ to mention someone)")" data-i18n-placeholder="chat.inputPlaceholder"></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-icon" id="chat-send-btn" title="@(culture == "uk" ? "Надіслати (Enter)" : "Send (Enter)")" aria-label="@(culture == "uk" ? "Надіслати" : "Send")" data-i18n-title="chat.send">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================================================================
+                 VIEW 2: GITHUB REPO INTEGRATION (Code, MRs, Branches, Commits)
+                 =================================================================== -->
+            <div id="view-github" class="workspace-tab-view">
+                <div class="git-view-container">
+                    
+                    <!-- State A: No GitHub Repo Linked Yet -->
+                    <div id="git-no-repo-card" class="git-no-repo-card">
+                        <div class="git-no-repo-icon-wrap">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                            </svg>
+                        </div>
+                        <h2 class="git-no-repo-title">@(culture == "uk" ? "GitHub репозиторій не підключено" : "No GitHub Repository Connected")</h2>
+                        <p class="git-no-repo-desc">
+                            @(culture == "uk" ? "Підключіть публічний репозиторій GitHub, щоб переглядати код файлів, гілки, коміти, Pull Requests (MR), а також цитувати код у командному чаті." : "Connect a public GitHub repository to browse code, branches, commits, Pull Requests (MR), and quote code in team chat.")
+                        </p>
+                        <button type="button" class="btn btn-primary btn-md open-set-repo-btn-trigger" id="open-set-repo-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon-left"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            @(culture == "uk" ? "Підключити GitHub репозиторій" : "Connect GitHub Repository")
+                        </button>
+                    </div>
+
+                    <!-- State B: Active Connected Repository -->
+                    <div id="git-active-repo-card" class="git-active-repo-card">
+                        
+                        <!-- GitHub Topbar -->
+                        <div class="git-topbar">
+                            <div class="git-repo-badge">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                                <span id="git-repo-title" class="git-repo-title">repo</span>
+                                <span id="git-repo-meta" class="git-repo-meta"></span>
+                            </div>
+                            <div class="git-topbar-actions">
+                                <a id="git-repo-link" href="#" target="_blank" rel="noopener" class="btn btn-secondary btn-sm">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon-left-sm"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                    GitHub
+                                </a>
+                                <button type="button" class="btn btn-ghost btn-sm" id="change-repo-btn" onclick="document.getElementById('open-set-repo-btn').click();" title="Змінити посилання">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- GitHub Subtabs Bar -->
+                        <div class="git-subtabs-nav">
+                            <button type="button" class="git-subtab-btn is-active" data-subtab="code">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                                <span>@(culture == "uk" ? "Код" : "Code")</span>
+                            </button>
+                            <button type="button" class="git-subtab-btn" data-subtab="prs">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><path d="M13 6h3a2 2 0 0 1 2 2v7"></path><line x1="6" y1="9" x2="6" y2="21"></line></svg>
+                                <span>Pull Requests (MR)</span>
+                            </button>
+                            <button type="button" class="git-subtab-btn" data-subtab="branches">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="3" x2="6" y2="15"></line><circle cx="18" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><path d="M18 9a9 9 0 0 1-9 9"></path></svg>
+                                <span>@(culture == "uk" ? "Гілки" : "Branches")</span>
+                            </button>
+                            <button type="button" class="git-subtab-btn" data-subtab="commits">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><line x1="1.05" y1="12" x2="7" y2="12"></line><line x1="17.01" y1="12" x2="22.96" y2="12"></line></svg>
+                                <span>@(culture == "uk" ? "Коміти" : "Commits")</span>
+                            </button>
+                        </div>
+
+                        <!-- Subtab 1: Code Explorer -->
+                        <div id="git-pane-code" class="git-subtab-pane git-subtab-pane--code">
+                            <div class="git-nav-bar">
+                                <div class="git-branch-selector-wrap">
+                                    <select id="git-branch-select" class="select git-branch-select" data-custom-class="custom-select--branch" data-icon="git-branch"></select>
+                                </div>
+                                <div id="git-breadcrumbs" class="git-breadcrumbs"></div>
+                            </div>
+
+                            <div class="git-code-pane">
+                                <!-- Tree List Sidebar with search -->
+                                <div class="git-tree-sidebar">
+                                    <div class="git-tree-search-bar">
+                                        <input type="text" id="git-tree-search" class="git-tree-search-input" placeholder="@(culture == "uk" ? "Пошук файлу..." : "Filter files...")" autocomplete="off" />
+                                    </div>
+                                    <div id="git-tree-list" class="git-tree-list-content"></div>
+                                </div>
+                                
+                                <!-- Code & Markdown Viewer Viewport -->
+                                <div class="git-code-viewport">
+                                    <div id="git-code-toolbar" class="git-code-toolbar">
+                                        <div class="git-code-toolbar-empty">@(culture == "uk" ? "Виберіть файл ліворуч для перегляду" : "Select a file on the left to view code")</div>
+                                    </div>
+
+                                    <!-- Code table view -->
+                                    <div id="git-code-container" class="git-code-content-wrapper">
+                                        <div class="git-code-empty-state">
+                                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="git-code-empty-icon"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                                            <p>@(culture == "uk" ? "Оберіть файл для перегляду, цитування або копіювання коду." : "Select a file to inspect, quote, or copy code.")</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Markdown rendered view (for .md files) -->
+                                    <div id="git-markdown-preview" class="git-code-content-wrapper git-markdown-preview"></div>
+
+                                    <!-- Floating Line Quote Button -->
+                                    <button type="button" id="git-floating-quote-btn" class="git-floating-quote-btn"></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Subtab 2: Pull Requests (MR) -->
+                        <div id="git-pane-prs" class="git-subtab-pane git-subtab-pane--scrollable">
+                            <div class="git-pane-header">
+                                <h3 class="git-pane-title">Pull Requests (Merge Requests)</h3>
+                                <div class="git-pane-actions">
+                                    <button type="button" class="btn btn-secondary btn-sm pr-filter-btn is-active" data-state="open">@(culture == "uk" ? "Відкриті" : "Open")</button>
+                                    <button type="button" class="btn btn-ghost btn-sm pr-filter-btn" data-state="closed">@(culture == "uk" ? "Закриті" : "Closed")</button>
+                                    <button type="button" class="btn btn-ghost btn-sm pr-filter-btn" data-state="all">@(culture == "uk" ? "Усі" : "All")</button>
+                                </div>
+                            </div>
+                            <div id="git-prs-list" class="git-items-stack"></div>
+                            <div id="git-prs-load-more-container" class="git-load-more-container">
+                                <button type="button" id="git-prs-load-more-btn" class="btn btn-secondary btn-sm git-load-more-btn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg>
+                                    <span class="load-more-text">@(culture == "uk" ? "Завантажити ще" : "Load more")</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Subtab 3: Branches -->
+                        <div id="git-pane-branches" class="git-subtab-pane git-subtab-pane--scrollable">
+                            <h3 class="git-pane-title--spaced">@(culture == "uk" ? "Гілки репозиторію" : "Repository Branches")</h3>
+                            <div id="git-branches-list" class="git-items-stack"></div>
+                            <div id="git-branches-load-more-container" class="git-load-more-container">
+                                <button type="button" id="git-branches-load-more-btn" class="btn btn-secondary btn-sm git-load-more-btn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg>
+                                    <span class="load-more-text">@(culture == "uk" ? "Завантажити ще" : "Load more")</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Subtab 4: Commits -->
+                        <div id="git-pane-commits" class="git-subtab-pane git-subtab-pane--scrollable">
+                            <h3 class="git-pane-title--spaced">@(culture == "uk" ? "Історія комітів" : "Commit History")</h3>
+                            <div id="git-commits-list" class="git-items-stack"></div>
+                            <div id="git-commits-load-more-container" class="git-load-more-container">
+                                <button type="button" id="git-commits-load-more-btn" class="btn btn-secondary btn-sm git-load-more-btn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg>
+                                    <span class="load-more-text">@(culture == "uk" ? "Завантажити ще" : "Load more")</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================================================================
+                 VIEW 3: LIVEKIT VIDEO MEETINGS
+                 =================================================================== -->
+            <div id="view-meeting" class="workspace-tab-view">
+                <div class="meeting-container">
+                    
+                    <!-- Meeting Lobby Preview Screen -->
+                    <div id="meeting-lobby" class="meeting-lobby">
+                        <div class="meeting-lobby-card">
+                            <h2 class="meeting-lobby-title">@(culture == "uk" ? "Командна відеозустріч" : "Team Video Meeting")</h2>
+                            <p class="meeting-lobby-desc">
+                                @(culture == "uk" ? "Перевірте камеру та мікрофон перед входом до дзвінка." : "Check your camera and microphone before joining.")
+                            </p>
+
+                            <!-- Video Preview Box -->
+                            <div class="meeting-preview-box">
+                                <video id="meeting-preview-video" class="meeting-preview-video" autoplay playsinline muted></video>
+                                <div id="meeting-preview-placeholder" class="meeting-preview-placeholder">
+                                    <div class="meeting-avatar-fallback preview-avatar" id="meeting-preview-avatar">U</div>
+                                    <span class="meeting-preview-placeholder-text">@(culture == "uk" ? "Камеру вимкнено" : "Camera is off")</span>
+                                </div>
+                            </div>
+
+                            <!-- Lobby Device Controls & Join Button -->
+                            <div class="meeting-lobby-controls">
+                                <button type="button" id="lobby-toggle-mic-btn" class="btn btn-secondary btn-md">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon-left"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                                    <span>@(culture == "uk" ? "Мікрофон" : "Microphone")</span>
+                                </button>
+                                <button type="button" id="lobby-toggle-cam-btn" class="btn btn-secondary btn-md">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon-left"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                                    <span>@(culture == "uk" ? "Камера" : "Camera")</span>
+                                </button>
+                            </div>
+
+                            <button type="button" id="join-meeting-btn" class="btn btn-primary btn-lg meeting-join-btn">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon-left-md"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                <span>@(culture == "uk" ? "Приєднатися до дзвінка" : "Join Call")</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Active In-Call Room Grid View -->
+                    <div id="meeting-active-view" class="meeting-active-view">
+                        <div id="meeting-active-grid" class="meeting-active-grid">
+                            <!-- Local Participant Tile -->
+                            <div id="meeting-local-tile" class="meeting-tile">
+                                <video id="meeting-local-video" autoplay playsinline muted></video>
+                                <div id="meeting-local-avatar" class="meeting-avatar-fallback">U</div>
+                                <span id="meeting-local-name" class="meeting-tile-name">@(culture == "uk" ? "Ви" : "You")</span>
+                            </div>
+                        </div>
+
+                        <!-- Meeting Controls Bar -->
+                        <div class="meeting-controls-bar">
+                            <button type="button" id="ctrl-mic-btn" class="meeting-ctrl-btn" title="Мікрофон">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                            </button>
+                            <button type="button" id="ctrl-cam-btn" class="meeting-ctrl-btn" title="Камера">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                            </button>
+                            <button type="button" id="ctrl-screen-btn" class="meeting-ctrl-btn" title="Демонстрація екрана">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                            </button>
+                            
+                            <span id="meeting-call-timer" class="meeting-timer">00:00</span>
+
+                            <button type="button" id="ctrl-leave-btn" class="meeting-ctrl-btn is-leave">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67m-2.67-3.34a19.79 19.79 0 0 1-3.07-8.63A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91"></path><line x1="23" y1="1" x2="1" y2="23"></line></svg>
+                                <span>@(culture == "uk" ? "Завершити дзвінок" : "Leave Call")</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===================================================================
+                 VIEW 4: TEAM MEMBERS & JOIN REQUESTS (Leader Management)
+                 =================================================================== -->
+            <div id="view-members" class="workspace-tab-view workspace-tab-view--members">
+                <div class="members-grid">
+                    
+                    <!-- Team Members Card -->
+                    <div class="team-wrapper">
+                        <div class="card card--members">
+                            <div class="members-card-header">
+                                <h3 class="members-card-title" data-i18n="teams.teamMembers">@(culture == "uk" ? "Учасники команди" : "Team Members")</h3>
+                                <span id="members-count-badge" class="badge badge-secondary">0</span>
+                            </div>
+                            <div id="team-members-list" class="members-list-scrollable"></div>
+                        </div>
+                    </div>
+
+                    <div class="team-managment-wrapper">
+                        <!-- Join Requests Card (Visible only to Leader) -->
+                        <div class="card card--members" id="join-requests-card">
+                            <div class="members-card-header">
+                                <h3 class="members-card-title" data-i18n="teams.joinRequests">@(culture == "uk" ? "Заявки на вступ" : "Join Requests")</h3>
+                                <span id="requests-count-badge" class="badge badge-warning">0</span>
+                            </div>
+                            <div id="join-requests-list" class="members-list-scrollable"></div>
+                        </div>
+
+                        <!-- Team Management Card -->
+                        <div id="team-management-card" class="card card--members">
+                            <h4 class="members-mgmt-title" data-i18n="teams.management">@(culture == "uk" ? "Керування командою" : "Management")</h4>
+                            <div class="members-mgmt-actions">
+                                <button type="button" class="btn btn-secondary btn-sm" id="open-edit-project-modal-btn" data-i18n="teams.editProject">
+                                    @(culture == "uk" ? "Налаштування команди" : "Team Settings")
+                                </button>
+                                <button type="button" class="btn btn-danger danger btn-sm" id="leave-team-btn" data-i18n="teams.leaveTeam">
+                                    @(culture == "uk" ? "Покинути команду" : "Leave Team")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- ===========================================================================
+     MODALS & FLOATING WIDGETS
+     =========================================================================== -->
+
+<!-- Modal: Set/Update GitHub Repo -->
+<div class="modal-backdrop" id="set-repo-modal">
+    <div class="modal-card modal-card--set-repo">
+        <div class="modal-header">
+            <h2 class="modal-title">@(culture == "uk" ? "Публічний GitHub репозиторій" : "Public GitHub Repository")</h2>
+            <button type="button" class="btn btn-ghost" id="close-set-repo-btn" aria-label="Close">&times;</button>
+        </div>
+        <form id="set-repo-form">
+            <div class="modal-body modal-body-form">
+                <div id="set-repo-alert" class="alert alert-danger"></div>
+                <p class="modal-info-text">
+                    @(culture == "uk" ? "Вкажіть посилання на публічний репозиторій GitHub (наприклад, https://github.com/dotnet/aspnetcore або https://github.com/facebook/react). Організація та код стануть доступними усім учасникам команди." : "Enter a public GitHub repository link (e.g. https://github.com/dotnet/aspnetcore). The codebase will be available to all team members.")
+                </p>
+                <div class="field">
+                    <label class="field-label" for="set-repo-input">URL Репозиторію *</label>
+                    <input type="url" id="set-repo-input" class="input" placeholder="https://github.com/owner/repository" required />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" onclick="document.getElementById('set-repo-modal').style.display='none';">@(culture == "uk" ? "Скасувати" : "Cancel")</button>
+                <button type="submit" class="btn btn-primary" id="submit-set-repo-btn">@(culture == "uk" ? "Зберегти репозиторій" : "Save Repository")</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Pull Request Details & Diff View -->
+<div class="modal-backdrop" id="git-pr-details-modal">
+    <div class="modal-card git-pr-modal-card">
+        <div class="modal-header modal-header--git-pr">
+            <h2 class="modal-title modal-title--git-pr" id="git-pr-modal-title">@(culture == "uk" ? "Деталі Pull Request (MR)" : "Pull Request Details")</h2>
+            <button type="button" class="btn btn-ghost" id="close-pr-details-btn">&times;</button>
+        </div>
+        <div class="modal-body modal-body--git-pr" id="git-pr-details-body">
+            <div class="spinner"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Join Request (Apply to project) -->
+<div class="modal-backdrop" id="join-project-modal">
+    <div class="modal-card modal-card--join-project">
+        <div class="modal-header">
+            <h2 class="modal-title" data-i18n="teams.joinModalTitle">@(culture == "uk" ? "Подати заявку в команду" : "Apply to Team")</h2>
+            <button type="button" class="btn btn-ghost" id="close-join-modal-btn" aria-label="Close">&times;</button>
+        </div>
+        <form id="join-project-form" novalidate>
+            <div class="modal-body modal-body-form">
+                <div id="join-project-alert" class="alert alert-danger"></div>
+                <div class="field">
+                    <label class="field-label" for="join-requested-role" data-i18n="teams.joinRole">@(culture == "uk" ? "Бажана роль у проєкті *" : "Desired Role in Project *")</label>
+                    <input type="text" id="join-requested-role" name="requestedRole" class="input" placeholder="Frontend Developer, Backend, UI/UX..." data-i18n-placeholder="teams.joinRolePlaceholder" required maxlength="50" />
+                </div>
+                <div class="field">
+                    <label class="field-label" for="join-cover-message" data-i18n="teams.joinMessage">@(culture == "uk" ? "Супровідне повідомлення" : "Cover Message")</label>
+                    <textarea id="join-cover-message" name="coverMessage" class="textarea" rows="3" placeholder="@(culture == "uk" ? "Розкажіть про свій досвід та чим ви можете бути корисні команді..." : "Tell about your experience and how you can contribute to the team...")" data-i18n-placeholder="teams.joinMessagePlaceholder" maxlength="1000"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" id="cancel-join-btn" data-i18n="common.cancel">@(culture == "uk" ? "Скасувати" : "Cancel")</button>
+                <button type="submit" class="btn btn-primary" id="submit-join-btn">
+                    <span class="btn-text" data-i18n="teams.submitJoin">@(culture == "uk" ? "Надіслати заявку" : "Submit Request")</span>
+                    <span class="btn-spinner spinner"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Edit Project (For Leader) -->
+<div class="modal-backdrop" id="edit-project-modal">
+    <div class="modal-card modal-card--edit-project">
+        <div class="modal-header">
+            <h2 class="modal-title" data-i18n="teams.editModalTitle">@(culture == "uk" ? "Налаштування проєкту" : "Project Settings")</h2>
+            <button type="button" class="btn btn-ghost" id="close-edit-modal-btn" aria-label="Close">&times;</button>
+        </div>
+        <form id="edit-project-form" novalidate>
+            <div class="modal-body modal-body-form">
+                <div id="edit-project-alert" class="alert alert-danger"></div>
+                <div class="field">
+                    <label class="field-label" for="edit-project-title" data-i18n="teams.formTitle">@(culture == "uk" ? "Назва проєкту" : "Project Title")</label>
+                    <input type="text" id="edit-project-title" name="title" class="input" required minlength="3" maxlength="120" />
+                </div>
+                <div class="field">
+                    <label class="field-label" for="edit-project-description" data-i18n="teams.formDescription">@(culture == "uk" ? "Опис" : "Description")</label>
+                    <textarea id="edit-project-description" name="description" class="textarea" rows="4" required minlength="10" maxlength="3000"></textarea>
+                </div>
+                <div class="form-grid-2">
+                    <div class="field">
+                        <label class="field-label" for="edit-project-max-members" data-i18n="teams.formMaxMembers">@(culture == "uk" ? "Макс. учасників" : "Max Members")</label>
+                        <input type="number" id="edit-project-max-members" name="maxMembers" class="input" min="2" max="50" required />
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="edit-project-status" data-i18n="teams.status">@(culture == "uk" ? "Статус" : "Status")</label>
+                        <select id="edit-project-status" name="status" class="select">
+                            <option value="Recruiting" data-i18n="teams.statusRecruiting">@(culture == "uk" ? "Набір" : "Recruiting")</option>
+                            <option value="Active" data-i18n="teams.statusActive">@(culture == "uk" ? "В роботі" : "Active")</option>
+                            <option value="Completed" data-i18n="teams.statusCompleted">@(culture == "uk" ? "Завершено" : "Completed")</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="field-label" for="edit-project-skills" data-i18n="teams.formSkills">@(culture == "uk" ? "Потрібні технології / навички" : "Required Skills / Tech")</label>
+                    <input type="text" id="edit-project-skills" name="requiredSkills" class="input" />
+                </div>
+                <div class="field">
+                    <label class="field-label" data-i18n="projects.logoLabel">@(culture == "uk" ? "Логотип команди" : "Team Logo")</label>
+                    <div class="team-logo-edit-row">
+                        <div class="team-logo-preview-wrapper">
+                            <img id="edit-project-logo-preview" class="team-logo-preview" alt="Preview" style="display:none;" />
+                            <div id="edit-project-logo-fallback" class="team-logo-preview-fallback">?</div>
+                        </div>
+                        <div class="team-logo-actions">
+                            <div class="team-logo-btn-group">
+                                <label class="btn btn-secondary btn-sm" for="edit-project-logo-input">
+                                    <span data-i18n="projects.uploadLogo">@(culture == "uk" ? "Завантажити лого" : "Upload Logo")</span>
+                                </label>
+                                <input type="file" id="edit-project-logo-input" accept="image/png,image/jpeg,image/webp" style="display:none;" />
+                                <button type="button" class="btn btn-ghost danger btn-sm" id="edit-project-logo-remove" style="display:none;" data-i18n="projects.removeLogo">@(culture == "uk" ? "Видалити лого" : "Remove Logo")</button>
+                            </div>
+                            <p class="field-help" data-i18n="projects.logoHelp">@(culture == "uk" ? "Квадратне зображення (макс. 512x512 px, до 5 МБ)" : "Square image (max 512x512 px, up to 5 MB)")</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="field-label" for="edit-project-repo" data-i18n="projects.formRepoUrl">@(culture == "uk" ? "Публічний GitHub репозиторій (опціонально)" : "Public GitHub Repository (optional)")</label>
+                    <input type="url" id="edit-project-repo" name="repositoryUrl" class="input" placeholder="https://github.com/owner/repo" />
+                    <p class="field-help" data-i18n="projects.repoUrlHelp">@(culture == "uk" ? "Вкажіть посилання на публічний репозиторій для перегляду коду, гілок, комітів та MR." : "Link to a public repo to inspect code, branches, commits and PRs.")</p>
+                </div>
+                <div class="field field--checkbox-row">
+                    <input type="checkbox" id="edit-project-looking" name="isLookingForMembers" />
+                    <label for="edit-project-looking" data-i18n="teams.lookingForMembers">@(culture == "uk" ? "Відкрито для нових заявок" : "Open for new applications")</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" id="cancel-edit-btn" data-i18n="common.cancel">@(culture == "uk" ? "Скасувати" : "Cancel")</button>
+                <button type="submit" class="btn btn-primary" id="submit-edit-btn" data-i18n="common.save">@(culture == "uk" ? "Зберегти" : "Save")</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Image Lightbox Modal -->
+<div class="modal-backdrop image-lightbox-backdrop" id="image-lightbox">
+    <button type="button" class="lightbox-close-btn" id="lightbox-close-btn" aria-label="Close">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    </button>
+    <div class="lightbox-content">
+        <img id="lightbox-img" class="lightbox-image" src="" alt="Full preview" />
+        <div class="lightbox-caption-bar">
+            <span id="lightbox-caption" class="lightbox-caption"></span>
+            <a id="lightbox-download-link" href="#" class="btn btn-secondary btn-sm" download>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon-left-sm"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span data-i18n="common.download">@(culture == "uk" ? "Завантажити" : "Download")</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Mini-Call PiP Widget (when user leaves meeting tab while in-call) -->
+<div id="meeting-pip-widget" class="meeting-pip-widget">
+    <div class="meeting-pip-info">
+        <span class="sidebar-meeting-dot"></span>
+        <span id="pip-call-timer" class="meeting-pip-timer">00:00</span>
+    </div>
+    <div class="meeting-pip-actions">
+        <button type="button" id="pip-mic-btn" class="btn btn-ghost btn-sm meeting-pip-btn-mic" title="Мікрофон">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+        </button>
+        <button type="button" id="pip-return-btn" class="btn btn-primary btn-sm meeting-pip-btn-return">
+            @(culture == "uk" ? "Повернутись" : "Return")
+        </button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.9/purify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
+    <script src="~/js/signalr.min.js" asp-append-version="true"></script>
+    <script src="~/js/pages/team-chat.js" asp-append-version="true"></script>
+    <script src="~/js/pages/github-workspace.js" asp-append-version="true"></script>
+    <script src="~/js/pages/team-meetings.js" asp-append-version="true"></script>
+    <script src="~/js/pages/team-workspace.js" asp-append-version="true"></script>
+}

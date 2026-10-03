@@ -1,0 +1,473 @@
+@{
+    var culture = ViewContext.RouteData.Values["culture"]?.ToString() ?? "uk";
+    ViewData["Title"] = culture == "uk" ? "Часті запитання (FAQ)" : "Frequently Asked Questions (FAQ)";
+    ViewData["MainClass"] = "main--full-bleed";
+    ViewData["MetaDescription"] = culture == "uk"
+        ? "Відповіді на поширені запитання про платформу LinqUp: пошук студентських команд, стек навичок, хакатони, курсові та безпеку даних."
+        : "Answers to common questions about LinqUp: finding student teams, tech skill matching, hackathons, privacy, and team workspaces.";
+}
+
+<div class="faq-page">
+    <div class="faq-hero">
+        <div class="faq-hero-glow" aria-hidden="true"></div>
+        <div class="container">
+            <nav class="faq-breadcrumbs" aria-label="Breadcrumb">
+                <a href="/@culture/">@(culture == "uk" ? "Головна" : "Home")</a>
+                <span class="faq-breadcrumbs-separator" aria-hidden="true">/</span>
+                <span aria-current="page" data-i18n="faq.title">@(culture == "uk" ? "Часті запитання" : "FAQ")</span>
+            </nav>
+
+            <h1 class="faq-hero-title" data-i18n="faq.heroTitle">
+                @(culture == "uk" ? "Часті запитання" : "Frequently Asked Questions")
+            </h1>
+            <p class="faq-hero-lead" data-i18n="faq.heroLead">
+                @(culture == "uk"
+                    ? "Зібрали зрозумілі та відверті відповіді на все, що вас цікавить про створення команд, пошук однодумців та спільний запуск студентських проєктів."
+                    : "Straightforward and honest answers to everything you want to know about creating teams, discovering peers, and launching student projects together.")
+            </p>
+
+            <!-- Interactive Live Search -->
+            <div class="faq-search-wrapper">
+                <div class="faq-search-box">
+                    <span class="faq-search-icon" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </span>
+                    <input type="text"
+                           id="faq-search-input"
+                           class="faq-search-input"
+                           placeholder="@(culture == "uk" ? "Пошук запитання за ключовими словами..." : "Search questions by keywords...")"
+                           data-i18n-placeholder="faq.searchPlaceholder"
+                           autocomplete="off"
+                           aria-label="@(culture == "uk" ? "Пошук запитання" : "Search questions")" />
+                    <button type="button"
+                            id="faq-search-clear"
+                            class="faq-search-clear"
+                            aria-label="@(culture == "uk" ? "Очистити пошук" : "Clear search")"
+                            title="@(culture == "uk" ? "Очистити пошук" : "Clear search")">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Category Filters & Toolbar -->
+        <div class="faq-filter-bar">
+            <div class="faq-categories" id="faq-categories" role="tablist" aria-label="FAQ Categories">
+                <button type="button" class="faq-category-btn is-active" data-category="all" data-i18n="faq.categoryAll">
+                    @(culture == "uk" ? "Усі питання" : "All Questions")
+                </button>
+                <button type="button" class="faq-category-btn" data-category="general" data-i18n="faq.categoryGeneral">
+                    @(culture == "uk" ? "Про платформу" : "Platform")
+                </button>
+                <button type="button" class="faq-category-btn" data-category="teams" data-i18n="faq.categoryTeams">
+                    @(culture == "uk" ? "Команди та пошук" : "Teams & Search")
+                </button>
+                <button type="button" class="faq-category-btn" data-category="projects" data-i18n="faq.categoryProjects">
+                    @(culture == "uk" ? "Проєкти та хакатони" : "Projects & Hackathons")
+                </button>
+                <button type="button" class="faq-category-btn" data-category="security" data-i18n="faq.categorySecurity">
+                    @(culture == "uk" ? "Безпека та акаунт" : "Security & Account")
+                </button>
+            </div>
+
+            <div class="faq-expand-controls">
+                <button type="button" class="faq-expand-btn" id="faq-expand-all" data-i18n="faq.expandAll">
+                    @(culture == "uk" ? "Розгорнути всі" : "Expand all")
+                </button>
+                <span class="faq-expand-divider">•</span>
+                <button type="button" class="faq-expand-btn" id="faq-collapse-all" data-i18n="faq.collapseAll">
+                    @(culture == "uk" ? "Згорнути всі" : "Collapse all")
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Status / Counter -->
+        <div class="faq-search-status" id="faq-search-status" aria-live="polite">
+            <span data-i18n="faq.resultsFound">@(culture == "uk" ? "Знайдено запитань" : "Questions found"): </span>
+            <strong id="faq-search-count">0</strong>
+        </div>
+
+        <!-- Accordions List -->
+        <div class="faq-accordion-group" id="faq-accordion-list">
+            <!-- Q1: General / Platform -->
+            <div class="faq-card is-open" id="faq-q1" data-category="general">
+                <button type="button" class="faq-trigger" aria-expanded="true" aria-controls="faq-ans-1">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#01</span>
+                        <span class="faq-question-text" data-i18n="faq.q1Title">
+                            @(culture == "uk" ? "Чи платформа LinqUp дійсно безкоштовна для студентів?" : "Is LinqUp truly free for students?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-1">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q1Answer">
+                            @(culture == "uk"
+                                ? "Так, LinqUp є неприбутковою ініціативою для українського студентства. Реєстрація, створення профілю з портфоліо та навичками, публікація проєктів, пошук тімейтів, подача заявок та повноцінний Workspace з командним чатом є на 100% безкоштовними."
+                                : "Yes, LinqUp is a non-profit initiative built for Ukrainian students. Registration, building your portfolio profile, publishing projects, teammate matchmaking, join requests, and our team workspace with real-time chat are 100% free.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q2: Teams / Beginners -->
+            <div class="faq-card" id="faq-q2" data-category="teams">
+                <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-2">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#02</span>
+                        <span class="faq-question-text" data-i18n="faq.q2Title">
+                            @(culture == "uk" ? "Що робити, якщо я новачок і маю мало практичного досвіду?" : "What if I am a beginner with little practical experience?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-2">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q2Answer">
+                            @(culture == "uk"
+                                ? "LinqUp створений саме для того, щоб ви могли отримати свій перший командний досвід. Більшість студентських команд шукають не досвідчених сеньйорів, а вмотивованих однодумців, готових вчитися разом. Вкажіть технології, якими цікавитеся, та обирайте команди з поміткою початкового рівня."
+                                : "LinqUp is specifically tailored to help students gain their first real collaborative experience. Most student teams are looking for eager peers ready to learn together, not seasoned seniors. Simply list what you study and look for beginner-friendly projects.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q3: Projects / Hackathons / Coursework -->
+            <div class="faq-card" id="faq-q3" data-category="projects">
+                <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-3">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#03</span>
+                        <span class="faq-question-text" data-i18n="faq.q3Title">
+                            @(culture == "uk" ? "Чи можна зібрати команду для курсової, диплома або хакатону?" : "Can I assemble a team for a coursework, diploma, or hackathon?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-3">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q3Answer">
+                            @(culture == "uk"
+                                ? "Безумовно. Під час створення команди ви можете вказати мету проєкту — наприклад, «Хакатон», «Курсова робота», «Дипломний проєкт» чи «Стартап / Open Source». Це допомагає знайти студентів із вашого або інших університетів, які зацікавлені саме в такому форматі."
+                                : "Absolutely. When creating a project, you can specify its goal: 'Hackathon', 'Coursework', 'Diploma Thesis', or 'Startup / Open Source'. This attracts students from your own campus or universities across Ukraine interested in the same focus.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q4: Match Algorithm -->
+            <div class="faq-card" id="faq-q4" data-category="general">
+                <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-4">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#04</span>
+                        <span class="faq-question-text" data-i18n="faq.q4Title">
+                            @(culture == "uk" ? "Як працює відсоток сумісності (Match) за навичками?" : "How does the skill Match percentage work?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-4">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q4Answer">
+                            @(culture == "uk"
+                                ? "Наш розумний алгоритм зіставляє потрібні технології проєкту (наприклад, C#, React, FastAPI, Figma) зі списком навичок у вашому профілі. Чим більше релевантних навичок збігається, тим вищий бал сумісності (наприклад, 98% Match), і тим вище проєкт відображається у вашій персональній стрічці."
+                                : "Our algorithm matches the required technologies of a project (e.g., C#, React, FastAPI, Figma) with your profile skills. The more complementary skills match, the higher the compatibility score (e.g., 98% Match), elevating the project in your personal feed.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q5: Security & Privacy -->
+            <div class="faq-card" id="faq-q5" data-category="security">
+                <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-5">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#05</span>
+                        <span class="faq-question-text" data-i18n="faq.q5Title">
+                            @(culture == "uk" ? "Як захищені мої ідеї та особисті дані?" : "How are my ideas and personal data protected?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-5">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q5Answer">
+                            @(culture == "uk"
+                                ? "Ми суворо дотримуємося законодавства України про захист персональних даних та європейських стандартів GDPR. Командний робочий простір, чати та завантажені файли доступні виключно схваленим учасникам команди. Публічно відображаються лише ті дані, які ви самі вирішили показати."
+                                : "We strictly comply with Ukrainian personal data legislation and GDPR standards. Team workspaces, chats, and uploaded files are accessible solely to approved team members. Only the details you intentionally make public are displayed in search.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q6: Applying to teams -->
+            <div class="faq-card" id="faq-q6" data-category="teams">
+                <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-6">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#06</span>
+                        <span class="faq-question-text" data-i18n="faq.q6Title">
+                            @(culture == "uk" ? "Як проходить процес приєднання до вподобаної команди?" : "How do I apply to join an inspiring team?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-6">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q6Answer">
+                            @(culture == "uk"
+                                ? "У списку відкритих проєктів оберіть команду, натисніть кнопку «Подати заявку», вкажіть бажану роль (Frontend, Backend, UI/UX тощо) та напишіть коротке вітальне повідомлення. Лідер команди отримає вашу заявку та зможе підтвердити ваш вступ."
+                                : "Browse open projects, click 'Apply to Join', pick your desired role (Frontend, Backend, UI/UX, etc.) and write a brief intro. The team leader receives your request and can approve your entry to the workspace.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q7: Cross-university / Remote -->
+            <div class="faq-card" id="faq-q7" data-category="general">
+                <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-7">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#07</span>
+                        <span class="faq-question-text" data-i18n="faq.q7Title">
+                            @(culture == "uk" ? "Чи можуть об'єднуватися студенти з різних університетів та міст?" : "Can students from different universities and cities collaborate?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-7">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q7Answer">
+                            @(culture == "uk"
+                                ? "Так! LinqUp створений як єдиний простір для студентів з усіх куточків України (Київ, Львів, Харків, Луцьк, Одеса, Дніпро та інші). Ви можете співпрацювати повністю дистанційно за допомогою вбудованого чату та інтеграцій з Discord, GitHub і Telegram."
+                                : "Yes! LinqUp unites students from across Ukraine (Kyiv, Lviv, Kharkiv, Lutsk, Odesa, Dnipro, and beyond). Most teams collaborate remotely using our built-in workspace, Discord, GitHub, and Telegram.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q8: Inactive Leads -->
+            <div class="faq-card" id="faq-q8" data-category="teams">
+                <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-8">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#08</span>
+                        <span class="faq-question-text" data-i18n="faq.q8Title">
+                            @(culture == "uk" ? "Що робити, якщо автор команди довго не відповідає на заявку?" : "What if a team leader doesn't respond to my application?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-8">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q8Answer">
+                            @(culture == "uk"
+                                ? "Якщо лідер команди не відповідає протягом кількох днів, ви можете відкликати заявку та подати її в інший проєкт. Система автоматично оновлює статус активності команд, тому застарілі проєкти з часом позначаються як неактивні."
+                                : "If a leader hasn't responded within several days, you can withdraw your application and apply to other teams. The platform automatically tracks activity, marking inactive projects accordingly.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q9: Multiple Teams -->
+            <div class="faq-card" id="faq-q9" data-category="projects">
+                <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-9">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#09</span>
+                        <span class="faq-question-text" data-i18n="faq.q9Title">
+                            @(culture == "uk" ? "Чи можу я одночасно брати участь у кількох командах?" : "Can I participate in multiple teams at the same time?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-9">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q9Answer">
+                            @(culture == "uk"
+                                ? "Так, ви можете бути учасником кількох проєктів одночасно (наприклад, короткий хакатонний спринт на вихідних та паралельно університетський курсовий проєкт), якщо ваш навчальний графік це дозволяє."
+                                : "Yes, you can join several projects simultaneously (for example, an intensive weekend hackathon plus an ongoing university thesis project), provided your workload allows.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q10: Workspace Features -->
+            <div class="faq-card" id="faq-q10" data-category="projects">
+                <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-10">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#10</span>
+                        <span class="faq-question-text" data-i18n="faq.q10Title">
+                            @(culture == "uk" ? "Які інструменти є всередині командного робочого простору?" : "What tools are included inside the team workspace?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-10">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q10Answer">
+                            @(culture == "uk"
+                                ? "У кожної команди є свій закритий Workspace: командний чат у реальному часі, обмін файлами та макетами, система згадок учасників (@нікнейм), список складу команди з контактами та панель налаштувань для лідера."
+                                : "Every team gets a dedicated Workspace: real-time team chat, file & mockup sharing, @mentions, member directory with contact shortcuts, and a settings panel for the team leader.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q11: Member Limits -->
+            <div class="faq-card" id="faq-q11" data-category="teams">
+                <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-11">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#11</span>
+                        <span class="faq-question-text" data-i18n="faq.q11Title">
+                            @(culture == "uk" ? "Чи є обмеження на кількість учасників у команді?" : "Is there a limit on team members?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-11">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q11Answer">
+                            @(culture == "uk"
+                                ? "Під час створення команди автор сам визначає максимальну кількість учасників (зазвичай від 2 до 10 людей залежно від масштабу проєкту). Лідер завжди може змінити цей ліміт у налаштуваннях."
+                                : "When creating a team, the author sets the maximum member capacity (typically 2 to 10 peers based on project scope). The team lead can adjust this limit anytime in settings.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q12: Leaving / Changing Role -->
+            <div class="faq-card" id="faq-q12" data-category="teams">
+                <button type="button" class="faq-trigger" aria-expanded="false" aria-controls="faq-ans-12">
+                    <div class="faq-header-content">
+                        <span class="faq-index">#12</span>
+                        <span class="faq-question-text" data-i18n="faq.q12Title">
+                            @(culture == "uk" ? "Чи можна покинути команду або змінити свою роль?" : "Can I leave a team or change my role later?")
+                        </span>
+                    </div>
+                    <div class="faq-icon-wrap" aria-hidden="true">
+                        <svg class="faq-icon-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                </button>
+                <div class="faq-collapse" id="faq-ans-12">
+                    <div class="faq-collapse-inner">
+                        <div class="faq-body" data-i18n="faq.q12Answer">
+                            @(culture == "uk"
+                                ? "Так, учасник може покинути команду в будь-який момент через панель робочого простору. Також лідер команди може коригувати ролі учасників за взаємною домовленістю."
+                                : "Yes, you can leave a team anytime from the workspace. Additionally, the team leader can update member roles by mutual agreement.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Empty State -->
+        <div class="faq-empty-state" id="faq-empty-state">
+            <div class="faq-empty-icon" aria-hidden="true">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </div>
+            <h3 class="faq-empty-title" data-i18n="faq.noResultsTitle">
+                @(culture == "uk" ? "Нічого не знайдено" : "No questions found")
+            </h3>
+            <p class="faq-empty-desc" data-i18n="faq.noResultsDesc">
+                @(culture == "uk"
+                    ? "Спробуйте змінити пошуковий запит або переглянути іншу категорію."
+                    : "Try adjusting your search terms or selecting another category.")
+            </p>
+            <button type="button" class="btn btn-secondary" onclick="document.getElementById('faq-search-clear').click()" data-i18n="faq.clearSearch">
+                @(culture == "uk" ? "Очистити пошук" : "Clear search")
+            </button>
+        </div>
+
+        <!-- Still Have Questions / Help Dock -->
+        <div class="faq-help-dock">
+            <div class="faq-help-dock-content">
+                <div class="faq-help-dock-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="faq-help-dock-title" data-i18n="faq.stillHaveQuestionsTitle">
+                        @(culture == "uk" ? "Не знайшли відповіді на своє питання?" : "Still have questions?")
+                    </h3>
+                    <p class="faq-help-dock-desc" data-i18n="faq.stillHaveQuestionsDesc">
+                        @(culture == "uk"
+                            ? "Ми завжди готові підказати, допомогти з пошуком команди або відповісти на будь-які технічні питання."
+                            : "We're always here to help you assemble a team, figure out tech requirements, or resolve any issues.")
+                    </p>
+                </div>
+            </div>
+            <div class="faq-help-dock-actions">
+                <a href="/@culture/#contact" class="btn btn-secondary btn-sm" data-i18n="faq.contactSupportBtn">
+                    @(culture == "uk" ? "Зв'язатися з нами" : "Contact Support")
+                </a>
+                <a href="https://t.me" target="_blank" rel="noopener noreferrer" class="btn-faq-telegram btn-sm">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21.5 2L2 9.5L9.5 13L13 20.5L21.5 2Z"/>
+                        <path d="M9.5 13L21.5 2"/>
+                    </svg>
+                    <span data-i18n="faq.telegramBtn">@(culture == "uk" ? "Telegram-спільнота" : "Telegram Community")</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/pages/faq.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,38 @@
+@inject IConfiguration Configuration
+@{
+    var culture = ViewContext.RouteData.Values["culture"]?.ToString() ?? "uk";
+    var pageTitle = ViewData["Title"] != null ? $"{ViewData["Title"]} — LinqUp" : "LinqUp";
+    var metaDescription = ViewData["MetaDescription"]?.ToString()
+        ?? "LinqUp — платформа, де студенти знаходять команду за навичками та запускають спільні проєкти.";
+    var ogImage = ViewData["OgImage"]?.ToString()
+        ?? "https://images.unsplash.com/photo-1758270705518-b61b40527e76?auto=format&fit=crop&w=1200&q=70";
+}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="api-base-url" content="@Configuration["Api:BaseUrl"]" />
+<meta name="app-culture" content="@culture" />
+<meta name="description" content="@metaDescription" />
+
+<meta property="og:title" content="@pageTitle" />
+<meta property="og:description" content="@metaDescription" />
+<meta property="og:image" content="@ogImage" />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="@(culture == "uk" ? "uk_UA" : "en_US")" />
+
+<title>@pageTitle</title>
+
+<link rel="icon" type="image/svg+xml" href="~/favicon.svg" asp-append-version="true" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<link rel="stylesheet" href="~/css/tokens.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/components.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/custom-select.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/legal.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/faq.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />

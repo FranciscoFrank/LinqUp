@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Sessions";
+    Layout = "_AppLayout";
+}
+
+<div class="page-header">
+    <h1 data-i18n="sessions.title">Активні сесії</h1>
+    <p data-i18n="sessions.subtitle">Пристрої, на яких виконано вхід у ваш акаунт.</p>
+</div>
+
+<div class="sessions-toolbar">
+    <button type="button" class="btn btn-danger danger" id="revoke-all-btn" data-i18n="sessions.revokeAll">Завершити всі інші сесії</button>
+</div>
+
+<div id="sessions-list" class="item-list"></div>
+<p id="sessions-empty" class="field-help" data-i18n="sessions.empty">Немає активних сесій.</p>
+
+@section Scripts {
+    <script src="~/js/auth-guard.js"></script>
+    <script src="~/js/pages/sessions.js"></script>
+}

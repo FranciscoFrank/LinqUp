@@ -1,0 +1,63 @@
+@{
+    ViewData["Title"] = "Security";
+    Layout = "_AppLayout";
+}
+
+<div class="page-header">
+    <h1 data-i18n="security.title">Безпека</h1>
+</div>
+
+<div class="card section">
+    <h3 class="section-title" data-i18n="security.twoFaTitle">Двофакторна автентифікація (2FA)</h3>
+
+    <div id="twofa-status-view">
+        <p>
+            <span id="twofa-status-badge" class="badge"></span>
+        </p>
+        <button type="button" class="btn btn-primary" id="twofa-enable-btn" data-i18n="security.enable">Увімкнути 2FA</button>
+        <div id="twofa-disable-block">
+            <button type="button" class="btn btn-secondary" id="twofa-regenerate-btn" data-i18n="security.recoveryRegenerate">Згенерувати нові коди</button>
+            <button type="button" class="btn btn-danger danger" id="twofa-disable-btn" data-i18n="security.disable">Вимкнути 2FA</button>
+        </div>
+    </div>
+
+    <div id="twofa-setup-view">
+        <p data-i18n="security.setupScan">Відскануйте QR-код застосунком-автентифікатором або введіть ключ вручну:</p>
+        <div class="qr-box" id="qr-box"></div>
+        <p class="code-block" id="manual-key"></p>
+
+        <p data-i18n="security.setupConfirm">Потім введіть код із застосунку, щоб підтвердити:</p>
+        <div id="setup-alert" class="alert alert-danger"></div>
+        <form id="setup-form" novalidate>
+            <partial name="Components/_TextField" model='new TextFieldModel { Id = "setup-code", Name = "code", Label = "Код підтвердження", LabelKey = "auth.code", Required = true }' />
+            <partial name="Components/_Button" model='new ButtonModel { Id = "setup-submit", Text = "Підтвердити і увімкнути", TextKey = "security.setupSubmit", Type = "submit", Variant = "primary" }' />
+        </form>
+    </div>
+
+    <div id="recovery-codes-view">
+        <h4 data-i18n="security.recoveryTitle">Резервні коди</h4>
+        <p data-i18n="security.recoveryWarning">Збережіть ці коди в надійному місці. Кожен працює лише один раз і знадобиться, якщо ви втратите доступ до застосунку-автентифікатора.</p>
+        <div class="code-grid" id="recovery-codes-grid"></div>
+        <div class="recovery-codes-actions">
+            <button type="button" class="btn btn-secondary" id="recovery-download-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon-left"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                <span data-i18n="auth.downloadTxt">Завантажити як .txt</span>
+            </button>
+            <button type="button" class="btn btn-primary btn-recovery-done" id="recovery-done-btn" data-i18n="common.close">Закрити</button>
+        </div>
+    </div>
+
+    <div id="disable-form-view">
+        <div id="disable-alert" class="alert alert-danger"></div>
+        <form id="disable-form" novalidate>
+            <partial name="Components/_TextField" model='new TextFieldModel { Id = "disable-password", Name = "password", Type = "password", Label = "Пароль", LabelKey = "security.disableConfirmPassword", Required = true }' />
+            <partial name="Components/_Button" model='new ButtonModel { Id = "disable-submit", Text = "Вимкнути 2FA", TextKey = "security.disable", Type = "submit", Variant = "danger" }' />
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/auth-guard.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="~/js/pages/security.js"></script>
+}

@@ -1,0 +1,480 @@
+@{
+    var culture = ViewContext.RouteData.Values["culture"]?.ToString() ?? "uk";
+    ViewData["Title"] = culture == "uk" ? "Умови використання" : "Terms of Use";
+    ViewData["MetaDescription"] = culture == "uk" 
+        ? "Офіційні умови використання та правила платформи LinqUp. Дізнайтеся про права користувачів, інтелектуальну власність та правила участі в командах."
+        : "Official Terms of Use and Community Guidelines for the LinqUp platform. Learn about user rights, intellectual property ownership, and team collaboration rules.";
+}
+
+<div class="legal-page">
+    <div class="legal-hero">
+        <div class="container">
+            <nav class="legal-breadcrumbs" aria-label="Breadcrumb">
+                <a href="/@culture/">@(culture == "uk" ? "Головна" : "Home")</a>
+                <span class="legal-breadcrumbs-separator" aria-hidden="true">/</span>
+                <span aria-current="page">@(culture == "uk" ? "Умови використання" : "Terms of Use")</span>
+            </nav>
+
+            <h1 class="legal-hero-title">
+                @(culture == "uk" ? "Умови використання платформи" : "Terms of Use")
+            </h1>
+            <p class="legal-hero-lead">
+                @(culture == "uk"
+                    ? "Будь ласка, уважно ознайомтеся з цими Умовами перед використанням платформи LinqUp. Тут чітко закріплено ваші права, правила спільноти та абсолютне право власності на всі створені вами проєкти."
+                    : "Please read these Terms carefully before using LinqUp. They define your rights, community rules, and guarantee your 100% intellectual property ownership over all your projects.")
+            </p>
+
+            <div class="legal-meta-bar">
+                <div class="legal-badges">
+                    <span class="legal-badge legal-badge--active">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+                        @(culture == "uk" ? "v1.0 • Чинна редакція" : "v1.0 • Current Version")
+                    </span>
+                    <span class="legal-badge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        @(culture == "uk" ? "16 вересня 2026 р." : "September 16, 2026")
+                    </span>
+                    <span class="legal-badge legal-badge--info">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        @(culture == "uk" ? "~7 хв читання" : "~7 min read")
+                    </span>
+                </div>
+
+                <div class="legal-actions">
+                    <button type="button" class="legal-action-btn" id="btn-print-doc" aria-label="Print document">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                        <span>@(culture == "uk" ? "Друкувати" : "Print")</span>
+                    </button>
+                    <button type="button" class="legal-action-btn" id="btn-copy-link" aria-label="Copy document link">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        <span id="btn-copy-text">@(culture == "uk" ? "Копіювати лінк" : "Copy Link")</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Quick Jump Pills for Mobile / Tablets -->
+        <div class="legal-mobile-pills" aria-label="Quick Section Navigation">
+            <a href="#section-1" class="legal-pill-link">01. @(culture == "uk" ? "Преамбула" : "Preamble")</a>
+            <a href="#section-2" class="legal-pill-link">02. @(culture == "uk" ? "Вимоги" : "Eligibility")</a>
+            <a href="#section-3" class="legal-pill-link">03. @(culture == "uk" ? "Платформа" : "Services")</a>
+            <a href="#section-4" class="legal-pill-link">04. @(culture == "uk" ? "Правила" : "Rules")</a>
+            <a href="#section-5" class="legal-pill-link">05. @(culture == "uk" ? "Власність" : "IP Rights")</a>
+            <a href="#section-6" class="legal-pill-link">06. @(culture == "uk" ? "Гарантії" : "Warranties")</a>
+            <a href="#section-7" class="legal-pill-link">07. @(culture == "uk" ? "Відповідальність" : "Liability")</a>
+            <a href="#section-8" class="legal-pill-link">08. @(culture == "uk" ? "Акаунти" : "Accounts")</a>
+            <a href="#section-9" class="legal-pill-link">09. @(culture == "uk" ? "Право" : "Law")</a>
+            <a href="#section-10" class="legal-pill-link">10. @(culture == "uk" ? "Контакти" : "Contacts")</a>
+        </div>
+
+        <div class="legal-layout">
+            <!-- Desktop Sticky Table of Contents -->
+            <aside class="legal-toc-aside" aria-label="Table of contents">
+                <div class="legal-toc-card">
+                    <div class="legal-toc-title">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        @(culture == "uk" ? "Зміст умов" : "Contents")
+                    </div>
+                    <ul class="legal-toc-list">
+                        <li class="legal-toc-item"><a href="#section-1" class="legal-toc-link">1. @(culture == "uk" ? "Прийняття умов та преамбула" : "Acceptance of Terms")</a></li>
+                        <li class="legal-toc-item"><a href="#section-2" class="legal-toc-link">2. @(culture == "uk" ? "Вимоги до користувачів та акаунт" : "Eligibility & Account Security")</a></li>
+                        <li class="legal-toc-item"><a href="#section-3" class="legal-toc-link">3. @(culture == "uk" ? "Призначення та статус платформи" : "Platform Purpose & Scope")</a></li>
+                        <li class="legal-toc-item"><a href="#section-4" class="legal-toc-link">4. @(culture == "uk" ? "Правила поведінки (Community)" : "Acceptable Use & Conduct")</a></li>
+                        <li class="legal-toc-item"><a href="#section-5" class="legal-toc-link">5. @(culture == "uk" ? "Інтелектуальна власність проєктів" : "Intellectual Property Rights")</a></li>
+                        <li class="legal-toc-item"><a href="#section-6" class="legal-toc-link">6. @(culture == "uk" ? "Відмова від гарантій (AS IS)" : "Disclaimer of Warranties")</a></li>
+                        <li class="legal-toc-item"><a href="#section-7" class="legal-toc-link">7. @(culture == "uk" ? "Обмеження відповідальності" : "Limitation of Liability")</a></li>
+                        <li class="legal-toc-item"><a href="#section-8" class="legal-toc-link">8. @(culture == "uk" ? "Призупинення та видалення акаунта" : "Suspension & Termination")</a></li>
+                        <li class="legal-toc-item"><a href="#section-9" class="legal-toc-link">9. @(culture == "uk" ? "Застосовне право та спори" : "Governing Law & Disputes")</a></li>
+                        <li class="legal-toc-item"><a href="#section-10" class="legal-toc-link">10. @(culture == "uk" ? "Зміни умов та контакти" : "Changes to Terms & Contacts")</a></li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Main Legal Article -->
+            <article class="legal-article">
+                @if (culture == "uk")
+                {
+                    <!-- Section 1: Acceptance -->
+                    <section class="legal-section" id="section-1">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">01</span>
+                            <h2 class="legal-section-title">Прийняття умов та преамбула</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>Реєструючись на LinqUp, ви укладаєте юридично обов'язкову угоду та погоджуєтеся дотримуватися цих правил та нашої Політики конфіденційності.</p>
+                        </div>
+                        <p>Ці Умови використання (надалі — «Умови») являють собою офіційний договір публічної оферти між вами (надалі — «Користувач») та командою платформи <strong>LinqUp</strong> (бул. Івана Газюка, 8А, м. Луцьк, Україна).</p>
+                        <p>Створюючи обліковий запис або використовуючи будь-яку функціональність веб-сайту LinqUp, ви беззастережно підтверджуєте свою згоду з цими Умовами, а також з нашою <a href="/@culture/Home/Privacy">Політикою конфіденційності</a>. Якщо ви не погоджуєтесь із цими умовами, ви повинні негайно припинити використання платформи.</p>
+                    </section>
+
+                    <!-- Section 2: Eligibility & Accounts -->
+                    <section class="legal-section" id="section-2">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">02</span>
+                            <h2 class="legal-section-title">Вимоги до користувачів та безпека акаунта</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>Платформа розрахована на осіб віком від 16 років. Ви несете особисту відповідальність за збереження свого пароля та за всі дії, що відбуваються під вашим профілем.</p>
+                        </div>
+                        <p>Для реєстрації та користування сервісом встановлюються такі вимоги:</p>
+                        <ul>
+                            <li><strong>Віковий ценз:</strong> Користувач повинен досягти віку щонайменше <strong>16 років</strong> або мати явний дозвіл батьків (усиновлювачів/піклувальників) на участь у платформі відповідно до Цивільного кодексу України.</li>
+                            <li><strong>Достовірність даних:</strong> Ви зобов'язуєтеся вказувати актуальну, правдиву адресу електронної пошти, справжнє ім'я або коректний псевдонім (nickname). Створення фіктивних акаунтів заборонено.</li>
+                            <li><strong>Безпека облікових даних:</strong> Ви несете повну відповідальність за надійність пароля. Якщо ви підозрюєте компрометацію облікових даних, ви повинні негайно скористатися функцією відкликання сесій у розділі <em>Security</em> та змінити пароль.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 3: Platform Nature & Scope -->
+                    <section class="legal-section" id="section-3">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">03</span>
+                            <h2 class="legal-section-title">Призначення та статус платформи</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>LinqUp — це інструмент для пошуку партнерів у команду та хакатонів. LinqUp не є роботодавцем, стороною угод між студентами чи фінансовим гарантом успіху ваших стартапів.</p>
+                        </div>
+                        <p>LinqUp надає некомерційний інформаційно-комунікаційний простір для студентів і молодих розробників:</p>
+                        <ul>
+                            <li>Створення публічного профілю з переліком підтверджених навичок (UserSkills);</li>
+                            <li>Публікація ідей проєктів та пошук однодумців за алгоритмом підбору сумісності (LinqUp Match);</li>
+                            <li>Взаємний обмін зовнішніми контактами (Telegram, Discord, LinkedIn тощо) для початку командної роботи.</li>
+                        </ul>
+                        <div class="legal-alert legal-alert--info">
+                            <strong>Правове застереження:</strong> LinqUp є виключно технічним майданчиком знайомств. LinqUp не є стороною контрактів або домовленостей, які користувачі укладають між собою, не виступає посередником у цивільно-правових спорах між членами команд та не несе зобов'язань щодо працевлаштування чи виплати винагород.
+                        </div>
+                    </section>
+
+                    <!-- Section 4: Acceptable Use & Conduct -->
+                    <section class="legal-section" id="section-4">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">04</span>
+                            <h2 class="legal-section-title">Правила спільноти та неприйнятна поведінка (Acceptable Use)</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>Поважайте колег. Будь-який спам, образи, парсинг контактів студентів чи спроби зламати платформу суворо заборонені й ведуть до миттєвого бану.</p>
+                        </div>
+                        <p>Користувачам категорично забороняється:</p>
+                        <ul>
+                            <li><strong>Дискримінація та мова ворожнечі:</strong> публікувати образливий, погрозливий, дискримінаційний контент за будь-якою ознакою або вчиняти цькування (булінг) щодо інших студентів.</li>
+                            <li><strong>Автоматизований скрапінг:</strong> використовувати ботів, скрапери, павуки (crawlers) чи скрипти для масового копіювання контактів або бази навичок студентів.</li>
+                            <li><strong>Атаки на інфраструктуру:</strong> здійснювати спроби порушення цілісності API, обходу обмеження частоти запитів (Rate Limiting), ін'єкцій шкідливого коду або DDoS-атак.</li>
+                            <li><strong>Спам і нецільова реклама:</strong> розсилати несанкціоновану комерційну рекламу, спам чи пропонувати сумнівні фінансові схеми.</li>
+                            <li><strong>Фальсифікація:</strong> видавати себе за іншу реальну особу (impersonation), брехати про свій університетський статус або привласнювати чужі проєкти.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 5: Intellectual Property -->
+                    <section class="legal-section" id="section-5">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">05</span>
+                            <h2 class="legal-section-title">Інтелектуальна власність та права на проєкти</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Коротко про головне
+                            </div>
+                            <p>Ваш код і ваші ідеї належать ТІЛЬКИ ВАМ! LinqUp не претендує на жодну частку в студентських проєктах чи права інтелектуальної власності.</p>
+                        </div>
+                        <p><strong>1. Права на студентські проєкти:</strong><br />
+                        Усі права інтелектуальної власності на програмний код, дизайн, бази даних, патенти, документацію та торговельні марки, створені командами в результаті знайомства на LinqUp, належать <strong>виключно їхнім авторам (студентам та командам)</strong>. LinqUp не претендує на частки у ваших розробках чи стартапах.</p>
+
+                        <p><strong>2. Ліцензія на публікацію в каталозі:</strong><br />
+                        Додаючи свій проєкт до публічної вітрини LinqUp (наприклад, StudyBuddy, CampusEats чи EcoTrack), ви надаєте LinqUp безоплатну невиключну ліцензію виключно на відображення назви, логотипу та опису проєкту в інтерфейсі платформи та промо-матеріалах для популяризації студентського ком'юніті.</p>
+
+                        <p><strong>3. Власність платформи LinqUp:</strong><br />
+                        Усі елементи платформи LinqUp, включно з вихідним кодом веб-додатку, дизайном, логотипом, кольоровою гамою та алгоритмом підбору команд, є об'єктами виключних прав команди LinqUp і захищені законодавством України та міжнародними договорами про авторське право.</p>
+                    </section>
+
+                    <!-- Section 6: Disclaimer of Warranties -->
+                    <section class="legal-section" id="section-6">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">06</span>
+                            <h2 class="legal-section-title">Відмова від гарантій (AS IS)</h2>
+                        </div>
+                        <p>Сервіс LinqUp надається за принципом <strong>«ЯК Є» («AS IS»)</strong> та <strong>«ЯК ДОСТУПНО» («AS AVAILABLE»)</strong>. Команда LinqUp не гарантує, що:</p>
+                        <ul>
+                            <li>Функціонал платформи буде повністю безперебійним, абсолютно безпомилковим або захищеним від будь-яких мережевих збоїв;</li>
+                            <li>Кожен користувач знайде команду мрії або що сформована команда успішно дійде до фіналу хакатону чи релізу;</li>
+                            <li>Інформація, вказана іншими студентами у профілях (досвід, знання мов), на 100% відповідає дійсності.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 7: Limitation of Liability -->
+                    <section class="legal-section" id="section-7">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">07</span>
+                            <h2 class="legal-section-title">Обмеження відповідальності</h2>
+                        </div>
+                        <p>У максимально дозволених чинним законодавством України межах, команда LinqUp та її розробники не несуть відповідальності за будь-які непрямі, випадкові, побічні чи штрафні збитки, неотриманий прибуток або втрату даних, що виникли внаслідок:</p>
+                        <ul>
+                            <li>Використання або неможливості використання платформи;</li>
+                            <li>Несанкціонованого доступу третіх осіб до вашого пристрою або сесії;</li>
+                            <li>Дій інших користувачів платформи або конфліктів усередині створених студентських команд.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 8: Suspension & Termination -->
+                    <section class="legal-section" id="section-8">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">08</span>
+                            <h2 class="legal-section-title">Призупинення дії та видалення акаунта</h2>
+                        </div>
+                        <p>Ви маєте право припинити дію цієї угоди в будь-який момент, видаливши свій обліковий запис самостійно в налаштуваннях або звернувшись до служби підтримки за адресою <a href="mailto:support@linqup.ua">support@linqup.ua</a>.</p>
+                        <p>LinqUp залишає за собою право тимчасово заблокувати або остаточно анулювати доступ до облікового запису в разі істотного порушення цих Умов (зокрема, розповсюдження шкідливого ПЗ, спаму або дій, що загрожують безпеці інших учасників).</p>
+                    </section>
+
+                    <!-- Section 9: Governing Law & Disputes -->
+                    <section class="legal-section" id="section-9">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">09</span>
+                            <h2 class="legal-section-title">Застосовне право та вирішення спорів</h2>
+                        </div>
+                        <p>Ці Умови регулюються та тлумачаться відповідно до <strong>матеріального права України</strong>.</p>
+                        <p>Усі спори чи розбіжності, що можуть виникнути у зв'язку з цими Умовами, підлягають першочерговому досудовому врегулюванню шляхом добросовісних переговорів протягом <strong>30 календарних днів</strong> з моменту надсилання письмової претензії на <a href="mailto:support@linqup.ua">support@linqup.ua</a>. У разі недосягнення згоди спір передається на розгляд компетентного суду України відповідно до встановленої підсудності.</p>
+                    </section>
+
+                    <!-- Section 10: Changes to Terms & Contacts -->
+                    <section class="legal-section" id="section-10">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">10</span>
+                            <h2 class="legal-section-title">Зміни до Умов та контакти</h2>
+                        </div>
+                        <p>Ми можемо періодично переглядати ці Умови. Чинна редакція завжди розміщена за адресою <code>linqup.ua/uk/Home/Terms</code>. Продовження користування LinqUp після публікації оновлених Умов означає вашу згоду з ними.</p>
+
+                        <div class="legal-contact-card">
+                            <div class="legal-contact-grid">
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Юридичні питання</span>
+                                    <span class="legal-contact-value"><a href="mailto:support@linqup.ua">support@linqup.ua</a></span>
+                                </div>
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Гаряча лінія</span>
+                                    <span class="legal-contact-value"><a href="tel:+380501013485">+380 95 037 22 86</a></span>
+                                </div>
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Локація офісу</span>
+                                    <span class="legal-contact-value">бул. Івана Газюка, 8А, м. Луцьк, Україна</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                }
+                else
+                {
+                    <!-- English Version -->
+                    <!-- Section 1: Acceptance -->
+                    <section class="legal-section" id="section-1">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">01</span>
+                            <h2 class="legal-section-title">Acceptance of Terms</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Key Takeaway
+                            </div>
+                            <p>By creating an account on LinqUp, you enter into a legally binding agreement and agree to follow these Terms and our Privacy Policy.</p>
+                        </div>
+                        <p>These Terms of Use (the "Terms") constitute a legally binding agreement between you (the "User") and the <strong>LinqUp</strong> project team (Ivana Haziuka Blvd, 8A, Lutsk, Ukraine).</p>
+                        <p>By accessing or using the LinqUp platform, you signify your irrevocable acceptance of these Terms and our <a href="/@culture/Home/Privacy">Privacy & Cookie Policy</a>. If you do not agree to these Terms, do not register or use our platform.</p>
+                    </section>
+
+                    <!-- Section 2: Eligibility & Accounts -->
+                    <section class="legal-section" id="section-2">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">02</span>
+                            <h2 class="legal-section-title">Eligibility & Account Security</h2>
+                        </div>
+                        <p>To use LinqUp, you must meet the following criteria:</p>
+                        <ul>
+                            <li><strong>Age Requirement:</strong> You must be at least <strong>16 years of age</strong> or have parental/guardian consent under applicable civil law.</li>
+                            <li><strong>Truthful Information:</strong> You agree to provide a valid email address, truthful details, and maintain an accurate account profile.</li>
+                            <li><strong>Credential Confidentiality:</strong> You are responsible for safeguarding your password and for all activities that occur under your account. In case of suspected unauthorized access, you must revoke sessions in your <em>Security</em> settings.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 3: Platform Purpose & Scope -->
+                    <section class="legal-section" id="section-3">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">03</span>
+                            <h2 class="legal-section-title">Platform Purpose & Scope</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Key Takeaway
+                            </div>
+                            <p>LinqUp is a matchmaking network for student teams. LinqUp is not an employer, partner, arbitrator, or guarantor of student startup outcomes.</p>
+                        </div>
+                        <p>LinqUp provides matchmaking tools to discover collaborators, build project teams, and exchange contact channels. LinqUp is not an employment agency or partner in any business created by users.</p>
+                    </section>
+
+                    <!-- Section 4: Acceptable Use & Conduct -->
+                    <section class="legal-section" id="section-4">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">04</span>
+                            <h2 class="legal-section-title">Acceptable Use & Community Guidelines</h2>
+                        </div>
+                        <p>The following actions are strictly prohibited:</p>
+                        <ul>
+                            <li>Harassment, hate speech, bullying, or discrimination against any student or participant;</li>
+                            <li>Automated scraping, bot indexing, or mass extracting of student profile contacts;</li>
+                            <li>Exploiting vulnerabilities, sending malicious code, or attempting denial-of-service (DDoS) attacks;</li>
+                            <li>Spamming, unauthorized commercial solicitation, or fraudulent recruiting;</li>
+                            <li>Impersonating another person or misrepresenting university credentials.</li>
+                        </ul>
+                    </section>
+
+                    <!-- Section 5: Intellectual Property -->
+                    <section class="legal-section" id="section-5">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">05</span>
+                            <h2 class="legal-section-title">Intellectual Property Ownership</h2>
+                        </div>
+                        <div class="legal-takeaway">
+                            <div class="legal-takeaway-header">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                Key Takeaway
+                            </div>
+                            <p>You own 100% of the code, intellectual property, and designs you build with your team. LinqUp claims zero ownership over your startup projects.</p>
+                        </div>
+                        <p><strong>1. User Project Ownership:</strong> All intellectual property rights in code, designs, repository assets, and concepts created by students remain exclusively with their respective authors and teams.</p>
+                        <p><strong>2. Platform License:</strong> By publishing your project to the LinqUp showcase, you grant LinqUp a non-exclusive license to present the project profile and logo to promote student initiatives.</p>
+                        <p><strong>3. LinqUp Brand Rights:</strong> LinqUp logos, user interface designs, and platform codebase are owned solely by the LinqUp team.</p>
+                    </section>
+
+                    <!-- Section 6: Disclaimer -->
+                    <section class="legal-section" id="section-6">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">06</span>
+                            <h2 class="legal-section-title">Disclaimer of Warranties</h2>
+                        </div>
+                        <p>The LinqUp service is provided on an <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong> basis without warranties of any kind, whether express or implied, including uninterrupted availability or suitability for a particular venture.</p>
+                    </section>
+
+                    <!-- Section 7: Limitation of Liability -->
+                    <section class="legal-section" id="section-7">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">07</span>
+                            <h2 class="legal-section-title">Limitation of Liability</h2>
+                        </div>
+                        <p>To the fullest extent permitted by applicable law, LinqUp shall not be liable for any indirect, incidental, or consequential damages resulting from your use of or inability to access the platform.</p>
+                    </section>
+
+                    <!-- Section 8: Termination -->
+                    <section class="legal-section" id="section-8">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">08</span>
+                            <h2 class="legal-section-title">Suspension & Termination</h2>
+                        </div>
+                        <p>You may delete your account at any time through account settings or by emailing <a href="mailto:support@linqup.ua">support@linqup.ua</a>. LinqUp reserves the right to suspend or terminate accounts that breach these Terms.</p>
+                    </section>
+
+                    <!-- Section 9: Governing Law -->
+                    <section class="legal-section" id="section-9">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">09</span>
+                            <h2 class="legal-section-title">Governing Law & Disputes</h2>
+                        </div>
+                        <p>These Terms are governed by and construed under the laws of <strong>Ukraine</strong>. Any disputes shall first be addressed through good faith negotiations for 30 calendar days before submission to Ukrainian courts.</p>
+                    </section>
+
+                    <!-- Section 10: Contacts -->
+                    <section class="legal-section" id="section-10">
+                        <div class="legal-section-header">
+                            <span class="legal-section-number">10</span>
+                            <h2 class="legal-section-title">Changes to Terms & Contacts</h2>
+                        </div>
+                        <div class="legal-contact-card">
+                            <div class="legal-contact-grid">
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Legal Inquiries</span>
+                                    <span class="legal-contact-value"><a href="mailto:support@linqup.ua">support@linqup.ua</a></span>
+                                </div>
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Telephone</span>
+                                    <span class="legal-contact-value"><a href="tel:+380501013485">+380 95 037 22 86</a></span>
+                                </div>
+                                <div class="legal-contact-item">
+                                    <span class="legal-contact-label">Office Address</span>
+                                    <span class="legal-contact-value">Ivana Haziuka Blvd, 8A, Lutsk, Ukraine</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                }
+            </article>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Print action
+            const printBtn = document.getElementById('btn-print-doc');
+            if (printBtn) {
+                printBtn.addEventListener('click', () => window.print());
+            }
+
+            // Copy Link action
+            const copyBtn = document.getElementById('btn-copy-link');
+            const copyText = document.getElementById('btn-copy-text');
+            if (copyBtn && copyText) {
+                copyBtn.addEventListener('click', async () => {
+                    try {
+                        await navigator.clipboard.writeText(window.location.href);
+                        const originalText = copyText.textContent;
+                        copyText.textContent = '@(culture == "uk" ? "Скопійовано!" : "Copied!")';
+                        setTimeout(() => { copyText.textContent = originalText; }, 2200);
+                    } catch (err) {
+                        console.error('Failed to copy URL', err);
+                    }
+                });
+            }
+
+            // Scroll spy for sticky TOC
+            const sections = document.querySelectorAll('.legal-section');
+            const tocLinks = document.querySelectorAll('.legal-toc-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        tocLinks.forEach((link) => {
+                            const href = link.getAttribute('href');
+                            if (href === `#${id}`) {
+                                link.classList.add('is-active');
+                            } else {
+                                link.classList.remove('is-active');
+                            }
+                        });
+                    }
+                });
+            }, {
+                rootMargin: '-20% 0px -70% 0px'
+            });
+
+            sections.forEach((sec) => observer.observe(sec));
+        });
+    </script>
+}

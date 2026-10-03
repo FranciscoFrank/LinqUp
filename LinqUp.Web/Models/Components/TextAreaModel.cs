@@ -1,0 +1,19 @@
+namespace LinqUp.Web.Models.Components
+{
+    public class TextAreaModel
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Label { get; set; } = string.Empty;
+        public string? Placeholder { get; set; }
+        public string? Value { get; set; }
+        public bool Required { get; set; }
+        public string? HelpText { get; set; }
+        public int Rows { get; set; } = 4;
+        public int? MaxLength { get; set; }
+
+        public string? LabelKey { get; set; }
+        public string? PlaceholderKey { get; set; }
+        public string? HelpTextKey { get; set; }
+    }
+}

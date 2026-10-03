@@ -1,0 +1,437 @@
+/* Keyboard focus visibility — applies beyond just inputs (buttons, links, custom widgets) */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+/* Form field wrapper */
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+
+.field-inline {
+    margin-bottom: 12px;
+}
+
+.field-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.field-required {
+    color: var(--color-danger-base);
+    margin-left: 2px;
+}
+
+.field-help {
+    font-size: 0.8rem;
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+    margin: 0;
+}
+
+.field-error {
+    font-size: 0.8rem;
+    color: var(--color-danger-base);
+    margin: 0;
+    min-height: 1em;
+}
+
+.field-error:empty {
+    display: none;
+}
+
+.field-error.is-success {
+    color: var(--color-success-base);
+}
+
+/* Text input / textarea / select */
+.input,
+.textarea,
+.select {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    width: 100%;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.textarea {
+    resize: vertical;
+    min-height: 88px;
+    font-family: var(--font-body);
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+    outline: none;
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 25%, transparent);
+}
+
+.input.is-invalid,
+.textarea.is-invalid,
+.select.is-invalid {
+    border-color: var(--color-danger-base);
+}
+
+.input:disabled,
+.textarea:disabled,
+.select:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+    color: color-mix(in srgb, var(--color-text) 45%, transparent);
+}
+
+/* Checkbox / radio — native controls, styled via accent-color */
+.checkbox-label,
+.radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.checkbox,
+.radio {
+    accent-color: var(--color-brand);
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.radio-group {
+    border: none;
+    padding: 0;
+    margin: 0 0 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.radio-group legend {
+    padding: 0;
+    margin-bottom: 4px;
+}
+
+.qr-box {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-md);
+    background: var(--color-white);
+    border-radius: var(--radius-md);
+}
+
+/* Buttons */
+.btn {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: filter 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-primary {
+    background: var(--color-brand);
+    color: var(--color-white);
+}
+
+.btn-primary:hover:not(:disabled) {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--color-brand) 30%, transparent);
+}
+
+.btn-secondary {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    border-color: var(--color-brand);
+    transform: translateY(-1px);
+}
+
+.btn-danger,
+.btn.danger {
+    background: color-mix(in srgb, var(--color-danger-base) 14%, transparent);
+    color: var(--color-danger-base);
+    border: 1px solid color-mix(in srgb, var(--color-danger-base) 35%, transparent);
+    font-weight: 500;
+}
+
+.btn-danger:hover:not(:disabled),
+.btn.danger:hover:not(:disabled) {
+    background: var(--color-danger-base);
+    color: #ffffff;
+    border-color: var(--color-danger-base);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--color-danger-base) 25%, transparent);
+}
+
+.btn-danger:active:not(:disabled),
+.btn.danger:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.btn-ghost.danger,
+.btn-ghost.text-danger,
+.btn-ghost-danger {
+    background: transparent;
+    color: var(--color-danger-base);
+    border-color: transparent;
+}
+
+.btn-ghost.danger:hover:not(:disabled),
+.btn-ghost.text-danger:hover:not(:disabled),
+.btn-ghost-danger:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-danger-base) 14%, transparent);
+    color: var(--color-danger-base);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--color-brand);
+    border-color: transparent;
+    padding: 8px 10px;
+}
+
+.btn-ghost:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-brand) 10%, transparent);
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 6px;
+    color: var(--color-text-secondary);
+}
+
+.btn-icon:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-brand) 10%, transparent);
+    color: var(--color-text);
+}
+
+.btn-icon.danger,
+.btn-icon.text-danger {
+    color: var(--color-danger-base);
+}
+
+.btn-icon.danger:hover:not(:disabled),
+.btn-icon.text-danger:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--color-danger-base) 14%, transparent);
+    color: var(--color-danger-base);
+}
+
+/* Badge */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--color-info-bg);
+    color: var(--color-info-text);
+}
+
+.badge-success {
+    background: var(--color-success-bg);
+    color: var(--color-success-text);
+}
+
+.badge-warning {
+    background: var(--color-warning-bg);
+    color: var(--color-warning-text);
+}
+
+.badge-danger {
+    background: var(--color-danger-bg);
+    color: var(--color-danger-text);
+}
+
+/* Card */
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Avatar */
+.avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: linear-gradient(135deg, var(--color-brand), var(--color-accent));
+    background-size: cover;
+    background-position: center;
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 700;
+    border: 2px solid var(--color-border);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+.avatar-md {
+    width: 52px;
+    height: 52px;
+    font-size: 1.25rem;
+}
+
+.avatar-sm {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
+}
+
+.avatar-xs {
+    width: 26px;
+    height: 26px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border-width: 1.5px;
+}
+
+/* Alerts / inline notices */
+.alert {
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+}
+
+.alert-success {
+    background: var(--color-success-bg);
+    color: var(--color-success-text);
+}
+
+.alert-danger {
+    background: var(--color-danger-bg);
+    color: var(--color-danger-text);
+}
+
+.alert-info {
+    background: var(--color-info-bg);
+    color: var(--color-info-text);
+}
+
+.alert:empty {
+    display: none;
+}
+
+/* Monospace display for keys / recovery codes */
+.code-block {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    word-break: break-all;
+    color: var(--color-text);
+}
+
+.code-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    font-family: var(--font-mono);
+    margin: 14px 0;
+}
+
+.code-grid span {
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--color-text);
+}
+
+.recovery-codes-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.recovery-codes-actions .btn-recovery-done {
+    margin-top: 0;
+}
+
+/* Password Toggle Eye Icons */
+.btn-password-toggle .icon-eye-off {
+    display: none;
+}
+
+.btn-password-toggle.is-active .icon-eye {
+    display: none;
+}
+
+.btn-password-toggle.is-active .icon-eye-off {
+    display: block;
+}
+
+/* Spinner helper for buttons */
+.btn-spinner {
+    display: none;
+}

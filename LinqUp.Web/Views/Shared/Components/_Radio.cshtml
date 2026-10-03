@@ -1,0 +1,19 @@
+@model LinqUp.Web.Models.Components.RadioGroupModel
+
+<fieldset class="field radio-group">
+    <legend class="field-label" data-i18n="@Model.LegendKey">@Model.Legend</legend>
+    @foreach (var option in Model.Options)
+    {
+        var optionId = $"{Model.Name}-{option.Value}";
+        <label class="radio-label" for="@optionId">
+            <input
+                class="radio"
+                id="@optionId"
+                name="@Model.Name"
+                type="radio"
+                value="@option.Value"
+                @(option.Value == Model.SelectedValue ? "checked" : "") />
+            <span>@option.Label</span>
+        </label>
+    }
+</fieldset>

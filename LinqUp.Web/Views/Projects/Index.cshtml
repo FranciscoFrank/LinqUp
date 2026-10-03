@@ -1,0 +1,132 @@
+@{
+    var culture = ViewContext.RouteData.Values["culture"]?.ToString() ?? "uk";
+    ViewData["Title"] = culture == "uk" ? "Команди" : "Teams";
+    Layout = "_AppLayout";
+}
+
+<div class="projects-page">
+    <div class="page-header projects-header">
+        <div>
+            <h1 class="page-title" data-i18n="teams.title">@(culture == "uk" ? "Команди та проєкти" : "Teams & Projects")</h1>
+            <p class="page-subtitle" data-i18n="teams.subtitle">@(culture == "uk" ? "Знаходьте однодумців, приєднуйтесь до відкритих команд або започаткуйте власну." : "Find like-minded peers, join open teams, or launch your own.")</p>
+        </div>
+        <div>
+            <button type="button" class="btn btn-primary" id="open-create-modal-btn">
+                <svg class="btn-icon-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span data-i18n="teams.createBtn">@(culture == "uk" ? "Створити команду" : "Create Team")</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabs: All vs My Projects -->
+    <div class="tabs-nav projects-tabs-nav">
+        <button type="button" class="tab-btn is-active" id="tab-all-projects" data-tab="all" data-i18n="teams.tabAll">
+            @(culture == "uk" ? "Відкриті команди" : "Open Teams")
+        </button>
+        <button type="button" class="tab-btn" id="tab-my-projects" data-tab="my" data-i18n="teams.tabMy">
+            @(culture == "uk" ? "Мої команди" : "My Teams")
+        </button>
+    </div>
+
+    <!-- Search and filter bar -->
+    <div class="card projects-filters-card">
+        <div class="projects-filters-row">
+            <div class="projects-search-col">
+                <input type="text" id="projects-search-input" class="input projects-search-input" placeholder="@(culture == "uk" ? "Пошук за назвою або описом..." : "Search by title or description...")" data-i18n-placeholder="teams.searchPlaceholder" />
+                <svg class="projects-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </div>
+            <div class="projects-skill-col">
+                <input type="text" id="projects-skill-filter" class="input projects-skill-input" placeholder="@(culture == "uk" ? "Фільтр за навичками (C#, React...)" : "Filter by skills (C#, React...)")" data-i18n-placeholder="teams.skillFilterPlaceholder" />
+            </div>
+            <button type="button" class="btn btn-secondary" id="projects-search-btn" data-i18n="common.search">@(culture == "uk" ? "Пошук" : "Search")</button>
+            <button type="button" class="btn btn-ghost" id="projects-reset-btn" data-i18n="common.reset">@(culture == "uk" ? "Скинути" : "Reset")</button>
+        </div>
+    </div>
+
+    <!-- Feedback messages -->
+    <div id="projects-alert" class="alert alert-danger"></div>
+
+    <!-- Projects Grid -->
+    <div id="projects-loading" class="projects-loading-state">
+        <div class="spinner projects-loading-spinner"></div>
+        <p data-i18n="common.loading">@(culture == "uk" ? "Завантаження..." : "Loading...")</p>
+    </div>
+
+    <div id="projects-empty" class="card projects-empty-state">
+        <svg class="projects-empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <h3 data-i18n="teams.emptyTitle">@(culture == "uk" ? "Команд не знайдено" : "No teams found")</h3>
+        <p class="text-muted mb-0" data-i18n="teams.emptySubtitle">@(culture == "uk" ? "Спробуйте змінити фільтри або створити свій власний проєкт." : "Try changing the filters or create your own project.")</p>
+    </div>
+
+    <div id="projects-grid" class="projects-grid"></div>
+</div>
+
+<!-- Modal: Create Project -->
+<div class="modal-backdrop" id="create-project-modal">
+    <div class="modal-card modal-card--projects-create">
+        <div class="modal-header">
+            <h2 class="modal-title" data-i18n="teams.createModalTitle">@(culture == "uk" ? "Створити нову команду" : "Create New Team")</h2>
+            <button type="button" class="btn btn-ghost" id="close-create-modal-btn" aria-label="@(culture == "uk" ? "Закрити" : "Close")" data-i18n-aria="common.close">&times;</button>
+        </div>
+        <form id="create-project-form" novalidate>
+            <div class="modal-body modal-body-form">
+                <div id="create-project-alert" class="alert alert-danger"></div>
+
+                <div class="field">
+                    <label class="field-label" for="project-title" data-i18n="teams.formTitle">@(culture == "uk" ? "Назва команди / проєкту *" : "Team / Project Title *")</label>
+                    <input type="text" id="project-title" name="title" class="input" placeholder="@(culture == "uk" ? "Наприклад: CodeCraft AI" : "e.g., CodeCraft AI")" data-i18n-placeholder="teams.placeholderTitle" required minlength="3" maxlength="120" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label" for="project-description" data-i18n="teams.formDescription">@(culture == "uk" ? "Опис і мета проєкту *" : "Description and Project Goals *")</label>
+                    <textarea id="project-description" name="description" class="textarea" rows="4" placeholder="@(culture == "uk" ? "Розкажіть про мету, ідею та кого саме ви шукаєте..." : "Describe the goals, vision, and roles you are looking for...")" data-i18n-placeholder="teams.placeholderDesc" required minlength="10" maxlength="3000"></textarea>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="field">
+                        <label class="field-label" for="project-max-members" data-i18n="teams.formMaxMembers">@(culture == "uk" ? "Макс. учасників" : "Max Members")</label>
+                        <input type="number" id="project-max-members" name="maxMembers" class="input" value="5" min="2" max="50" required />
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="project-creator-role" data-i18n="teams.formCreatorRole">@(culture == "uk" ? "Ваша роль у команді" : "Your Role in Team")</label>
+                        <input type="text" id="project-creator-role" name="creatorRole" class="input" value="Team Lead" maxlength="50" />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="field-label" for="project-skills" data-i18n="teams.formSkills">@(culture == "uk" ? "Потрібні технології / навички (через кому)" : "Required Skills / Tech (comma-separated)")</label>
+                    <input type="text" id="project-skills" name="requiredSkills" class="input" placeholder="C#, React, UI/UX, PostgreSQL..." />
+                    <small class="field-help" data-i18n="teams.skillsHelp">@(culture == "uk" ? "Вкажіть технології, щоб однодумцям було легше вас знайти." : "Specify technologies so teammates can find you easier.")</small>
+                </div>
+
+                <div class="field">
+                    <label class="field-label" for="project-repo-url" data-i18n="teams.formRepoUrl">@(culture == "uk" ? "Публічний GitHub репозиторій (опціонально)" : "Public GitHub Repository (optional)")</label>
+                    <input type="url" id="project-repo-url" name="repositoryUrl" class="input" placeholder="https://github.com/owner/repository" />
+                    <small class="field-help" data-i18n="teams.repoUrlHelp">@(culture == "uk" ? "Вкажіть посилання на публічний репозиторій для перегляду коду, гілок, комітів та MR." : "Provide a public repository URL to view code, branches, commits, and MRs.")</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-ghost" id="cancel-create-btn" data-i18n="common.cancel">@(culture == "uk" ? "Скасувати" : "Cancel")</button>
+                <button type="submit" class="btn btn-primary" id="submit-create-btn">
+                    <span class="btn-text" data-i18n="teams.submitCreate">@(culture == "uk" ? "Створити команду" : "Create Team")</span>
+                    <span class="btn-spinner spinner"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/pages/projects.js" asp-append-version="true"></script>
+}

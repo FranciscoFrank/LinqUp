@@ -1,0 +1,25 @@
+@model LinqUp.Web.Models.Components.TextAreaModel
+
+<div class="field">
+    <label class="field-label" for="@Model.Id" data-i18n="@Model.LabelKey">
+        @Model.Label
+        @if (Model.Required)
+        {
+            <span class="field-required" aria-hidden="true">*</span>
+        }
+    </label>
+    <textarea
+        class="textarea"
+        id="@Model.Id"
+        name="@Model.Name"
+        placeholder="@Model.Placeholder"
+        data-i18n-placeholder="@Model.PlaceholderKey"
+        rows="@Model.Rows"
+        maxlength="@Model.MaxLength"
+        @(Model.Required ? "required" : "")>@Model.Value</textarea>
+    @if (!string.IsNullOrEmpty(Model.HelpText))
+    {
+        <p class="field-help" data-i18n="@Model.HelpTextKey">@Model.HelpText</p>
+    }
+    <p class="field-error" data-error-for="@Model.Id"></p>
+</div>

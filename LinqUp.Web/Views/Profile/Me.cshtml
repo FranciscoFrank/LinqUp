@@ -1,0 +1,466 @@
+@{
+    ViewData["Title"] = "My profile";
+    Layout = "_AppLayout";
+    var contactTypeOptions = Enum.GetValues<ContactMethodType>()
+        .Select(v => new SelectOption { Value = v.ToString(), Label = v.ToString() })
+        .ToList();
+}
+
+<div class="page-header">
+    <h1 data-i18n="profile.meTitle">Мій профіль</h1>
+</div>
+
+<!-- Profile Header: Avatar with pencil overlay & public profile action -->
+<div class="profile-header">
+    <div class="avatar-profile-wrapper" id="avatar-wrapper" title="Змінити фото профілю">
+        <img id="avatar-img" class="avatar" alt="Avatar" />
+        <div id="avatar-fallback" class="avatar">?</div>
+        <button type="button" class="avatar-edit-badge" id="avatar-edit-btn" aria-label="Змінити фото" title="Змінити фото">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+        </button>
+    </div>
+    <div class="profile-header-info">
+        <h2 id="profile-fullname" class="mt-0 mb-0">&nbsp;</h2>
+        <div class="profile-nickname" id="profile-nickname-display">@@...</div>
+        <div class="profile-header-actions">
+            <a id="view-public-link" class="btn btn-ghost profile-view-public-btn" href="#" target="_blank" data-i18n="profile.viewPublic">
+                <span data-i18n="profile.viewPublic">Переглянути публічний профіль</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs Navigation -->
+<div class="profile-tabs-nav">
+    <button type="button" class="profile-tab-btn is-active" data-tab="general" id="tab-btn-general">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+        <span data-i18n="profile.tabGeneral">Загальне</span>
+    </button>
+    <button type="button" class="profile-tab-btn" data-tab="security" id="tab-btn-security">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        <span data-i18n="profile.tabSecurity">Безпека</span>
+        <span class="profile-tab-badge" id="security-tab-badge">2FA</span>
+    </button>
+    <button type="button" class="profile-tab-btn" data-tab="sessions" id="tab-btn-sessions">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+        <span data-i18n="profile.tabSessions">Сесії</span>
+        <span class="profile-tab-badge" id="sessions-count-badge">0</span>
+    </button>
+    <button type="button" class="profile-tab-btn" data-tab="integrations" id="tab-btn-integrations">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        <span data-i18n="profile.tabIntegrations">Інтеграції</span>
+        <span class="profile-tab-badge" id="integrations-count-badge">0</span>
+    </button>
+</div>
+
+<!-- ================= TAB 1: GENERAL ================= -->
+<div class="tab-pane is-active" id="tab-pane-general">
+    <div class="card section">
+        <h3 class="section-title" data-i18n="profile.sectionBasics">Основна інформація</h3>
+        <div id="profile-alert" class="alert alert-danger"></div>
+        <div id="profile-success" class="alert alert-success"></div>
+
+        <form id="profile-form" novalidate>
+            <div class="form-grid">
+                <partial name="Components/_TextField" model='new TextFieldModel { Id = "firstName", Name = "firstName", Label = "Ім’я", LabelKey = "auth.firstName", Required = true }' />
+                <partial name="Components/_TextField" model='new TextFieldModel { Id = "lastName", Name = "lastName", Label = "Прізвище", LabelKey = "auth.lastName", Required = true }' />
+            </div>
+            <partial name="Components/_TextField" model='new TextFieldModel { Id = "nickname", Name = "nickname", Label = "Нікнейм", LabelKey = "profile.nickname", Required = true, HelpText = "3-20 символів: латинські літери, цифри, «_». Завжди зберігається малими літерами.", HelpTextKey = "profile.nicknameHelp", MaxLength = 20 }' />
+            <partial name="Components/_TextArea" model='new TextAreaModel { Id = "bio", Name = "bio", Label = "Про себе", LabelKey = "profile.bio", Rows = 4, MaxLength = 500 }' />
+            <div class="field goal-field-group">
+                <label class="field-label" data-i18n="profile.goalLabel">Основна мета на платформі</label>
+                <p class="field-help" data-i18n="profile.goalHelp">Оберіть вашу головну мету, щоб знаходити релевантні команди та однодумців.</p>
+                <div class="goal-options-grid" id="goal-options-grid">
+                    <label class="goal-option-card">
+                        <input type="radio" name="goal" value="Project" class="goal-radio" />
+                        <div class="goal-card-content">
+                            <span class="goal-card-icon goal-card-icon--project" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path>
+                                    <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path>
+                                    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path>
+                                    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path>
+                                </svg>
+                            </span>
+                            <div class="goal-card-text">
+                                <span class="goal-card-title" data-i18n="profile.goalProject">Проєкт</span>
+                                <span class="goal-card-desc" data-i18n="profile.goalProjectDesc">Створення нового власного проєкту або стартапу</span>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="goal-option-card">
+                        <input type="radio" name="goal" value="Hackathon" class="goal-radio" />
+                        <div class="goal-card-content">
+                            <span class="goal-card-icon goal-card-icon--hackathon" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                </svg>
+                            </span>
+                            <div class="goal-card-text">
+                                <span class="goal-card-title" data-i18n="profile.goalHackathon">Хакатон</span>
+                                <span class="goal-card-desc" data-i18n="profile.goalHackathonDesc">Швидкий пошук команди для участі в хакатонах</span>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="goal-option-card">
+                        <input type="radio" name="goal" value="OpenSource" class="goal-radio" />
+                        <div class="goal-card-content">
+                            <span class="goal-card-icon goal-card-icon--opensource" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                                </svg>
+                            </span>
+                            <div class="goal-card-text">
+                                <span class="goal-card-title" data-i18n="profile.goalOpenSource">Опен сорс</span>
+                                <span class="goal-card-desc" data-i18n="profile.goalOpenSourceDesc">Внесок у відкриті репозиторії та спільний код</span>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="goal-option-card">
+                        <input type="radio" name="goal" value="FirstExperience" class="goal-radio" />
+                        <div class="goal-card-content">
+                            <span class="goal-card-icon goal-card-icon--firstexperience" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M7 20h10"></path>
+                                    <path d="M10 20c5.5-2.5.8-6.4 3-10"></path>
+                                    <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"></path>
+                                    <path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"></path>
+                                </svg>
+                            </span>
+                            <div class="goal-card-text">
+                                <span class="goal-card-title" data-i18n="profile.goalFirstExperience">Перший досвід</span>
+                                <span class="goal-card-desc" data-i18n="profile.goalFirstExperienceDesc">Навчання, перша командна розробка та портфоліо</span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <partial name="Components/_Button" model='new ButtonModel { Id = "profile-save", Text = "Зберегти зміни", TextKey = "profile.save", Type = "submit", Variant = "primary" }' />
+        </form>
+    </div>
+
+    <div class="card section">
+        <h3 class="section-title" data-i18n="profile.sectionContacts">Контакти</h3>
+        <div id="contacts-list" class="item-list"></div>
+        <p id="contacts-empty" class="field-help" data-i18n="profile.contactsEmpty">Ще не додано жодного контакту.</p>
+
+        <button type="button" class="btn btn-secondary btn-add-item" id="contact-add-toggle" data-i18n="profile.contactsAdd">Додати контакт</button>
+
+        <form id="contact-form" class="step inline-add-form" novalidate>
+            <partial name="Components/_Select" model='new SelectFieldModel { Id = "contact-type", Name = "type", Label = "Тип", LabelKey = "profile.contactType", Options = contactTypeOptions }' />
+            <partial name="Components/_TextField" model='new TextFieldModel { Id = "contact-value", Name = "value", Label = "Значення", LabelKey = "profile.contactValue", Required = true }' />
+            <partial name="Components/_Checkbox" model='new CheckboxModel { Id = "contact-primary", Name = "isPrimary", Label = "Основний", LabelKey = "profile.contactPrimary" }' />
+            <partial name="Components/_Button" model='new ButtonModel { Id = "contact-submit", Text = "Додати", TextKey = "common.add", Type = "submit", Variant = "primary" }' />
+        </form>
+    </div>
+
+    <div class="card section">
+        <h3 class="section-title" data-i18n="profile.sectionSkills">Навички</h3>
+        <div id="skills-list" class="item-list"></div>
+        <p id="skills-empty" class="field-help" data-i18n="profile.skillsEmpty">Ще не додано жодної навички.</p>
+
+        <button type="button" class="btn btn-secondary btn-add-item" id="skill-add-toggle" data-i18n="profile.skillsAdd">Додати навичку</button>
+
+        <form id="skill-form" class="step inline-add-form" novalidate>
+            <fieldset class="field radio-group">
+                <label class="radio-label">
+                    <input class="radio" type="radio" name="skill-mode" value="preset" checked />
+                    <span data-i18n="profile.skillPreset">Зі списку</span>
+                </label>
+                <label class="radio-label">
+                    <input class="radio" type="radio" name="skill-mode" value="custom" />
+                    <span data-i18n="profile.skillCustom">Своя назва</span>
+                </label>
+            </fieldset>
+
+            <div class="field" id="skill-preset-wrap">
+                <select class="select" id="skill-preset-select"></select>
+            </div>
+            <div class="field" id="skill-custom-wrap">
+                <partial name="Components/_TextField" model='new TextFieldModel { Id = "skill-custom-name", Name = "skillName", Label = "Назва навички", LabelKey = "profile.skillName" }' />
+            </div>
+
+            <partial name="Components/_TextField" model='new TextFieldModel { Id = "skill-experience", Name = "experienceMonths", Type = "number", Label = "Досвід (місяців)", LabelKey = "profile.skillExperience", Value = "0" }' />
+            <div id="skill-alert" class="alert alert-danger"></div>
+            <partial name="Components/_Button" model='new ButtonModel { Id = "skill-submit", Text = "Додати", TextKey = "common.add", Type = "submit", Variant = "primary" }' />
+        </form>
+    </div>
+</div>
+
+<!-- ================= TAB 2: SECURITY ================= -->
+<div class="tab-pane" id="tab-pane-security">
+    <!-- Change Password Card -->
+    <div class="card section">
+        <h3 class="section-title" data-i18n="security.changePasswordTitle">Зміна пароля</h3>
+        <div id="password-alert" class="alert alert-danger"></div>
+        <div id="password-success" class="alert alert-success"></div>
+
+        <form id="password-form" novalidate>
+            <div class="field">
+                <label class="field-label" for="current-password" data-i18n="security.currentPassword">Поточний пароль</label>
+                <div class="password-input-wrap">
+                    <input type="password" id="current-password" class="input" required autocomplete="current-password" />
+                    <button type="button" class="password-toggle-btn" data-toggle-for="current-password" aria-label="Показати пароль">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label class="field-label" for="new-password" data-i18n="security.newPassword">Новий пароль</label>
+                    <div class="password-input-wrap">
+                        <input type="password" id="new-password" class="input" required autocomplete="new-password" />
+                        <button type="button" class="password-toggle-btn" data-toggle-for="new-password" aria-label="Показати пароль">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="field-label" for="confirm-password" data-i18n="security.confirmPassword">Підтвердження нового пароля</label>
+                    <div class="password-input-wrap">
+                        <input type="password" id="confirm-password" class="input" required autocomplete="new-password" />
+                        <button type="button" class="password-toggle-btn" data-toggle-for="confirm-password" aria-label="Показати пароль">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="password-submit-btn" data-i18n="security.changePasswordBtn">Оновити пароль</button>
+        </form>
+    </div>
+
+    <!-- Change Email Card -->
+    <div class="card section">
+        <h3 class="section-title" data-i18n="security.changeEmailTitle">Зміна електронної пошти</h3>
+        <div id="email-alert" class="alert alert-danger"></div>
+        <div id="email-success" class="alert alert-success"></div>
+
+        <form id="email-form" novalidate>
+            <div class="field email-display-field">
+                <label class="field-label" data-i18n="security.currentEmail">Поточний email</label>
+                <div class="email-display-row">
+                    <span id="current-email-display" class="email-display-text">...</span>
+                    <span class="badge badge-success" data-i18n="security.emailVerifiedBadge">Верифіковано</span>
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label class="field-label" for="new-email" data-i18n="security.newEmail">Новий email</label>
+                    <input type="email" id="new-email" class="input" required placeholder="new-email@example.com" />
+                </div>
+
+                <div class="field">
+                    <label class="field-label" for="email-password-confirm" data-i18n="security.confirmPasswordForEmail">Пароль акаунту для підтвердження</label>
+                    <div class="password-input-wrap">
+                        <input type="password" id="email-password-confirm" class="input" required autocomplete="current-password" />
+                        <button type="button" class="password-toggle-btn" data-toggle-for="email-password-confirm" aria-label="Показати пароль">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" id="email-submit-btn" data-i18n="security.changeEmailBtn">Оновити email</button>
+        </form>
+    </div>
+
+    <!-- 2FA Card -->
+    <div class="card section">
+        <h3 class="section-title" data-i18n="security.twoFaTitle">Двофакторна автентифікація (2FA)</h3>
+
+        <div id="twofa-status-view">
+            <p>
+                <span id="twofa-status-badge" class="badge"></span>
+            </p>
+            <button type="button" class="btn btn-primary" id="twofa-enable-btn" data-i18n="security.enable">Увімкнути 2FA</button>
+            <div id="twofa-disable-block">
+                <button type="button" class="btn btn-secondary" id="twofa-regenerate-btn" data-i18n="security.recoveryRegenerate">Згенерувати нові коди</button>
+                <button type="button" class="btn btn-danger danger" id="twofa-disable-btn" data-i18n="security.disable">Вимкнути 2FA</button>
+            </div>
+        </div>
+
+        <div id="twofa-setup-view">
+            <p data-i18n="security.setupScan">Відскануйте QR-код застосунком-автентифікатором або введіть ключ вручну:</p>
+            <div class="qr-box" id="qr-box"></div>
+            <p class="code-block" id="manual-key"></p>
+
+            <p data-i18n="security.setupConfirm">Потім введіть код із застосунку, щоб підтвердити:</p>
+            <div id="setup-alert" class="alert alert-danger"></div>
+            <form id="setup-form" novalidate>
+                <partial name="Components/_TextField" model='new TextFieldModel { Id = "setup-code", Name = "code", Label = "Код підтвердження", LabelKey = "auth.code", Required = true }' />
+                <partial name="Components/_Button" model='new ButtonModel { Id = "setup-submit", Text = "Підтвердити і увімкнути", TextKey = "security.setupSubmit", Type = "submit", Variant = "primary" }' />
+            </form>
+        </div>
+
+        <div id="recovery-codes-view">
+            <h4 data-i18n="security.recoveryTitle">Резервні коди</h4>
+            <p data-i18n="security.recoveryWarning">Збережіть ці коди в надійному місці. Кожен працює лише один раз і знадобиться, якщо ви втратите доступ до застосунку-автентифікатора.</p>
+            <div class="code-grid" id="recovery-codes-grid"></div>
+            <div class="recovery-codes-actions">
+                <button type="button" class="btn btn-secondary" id="recovery-download-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon-left"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span data-i18n="auth.downloadTxt">Завантажити як .txt</span>
+                </button>
+                <button type="button" class="btn btn-primary btn-recovery-done" id="recovery-done-btn" data-i18n="common.close">Закрити</button>
+            </div>
+        </div>
+
+        <div id="disable-form-view">
+            <div id="disable-alert" class="alert alert-danger"></div>
+            <form id="disable-form" novalidate>
+                <partial name="Components/_TextField" model='new TextFieldModel { Id = "disable-password", Name = "password", Type = "password", Label = "Пароль", LabelKey = "security.disableConfirmPassword", Required = true }' />
+                <partial name="Components/_Button" model='new ButtonModel { Id = "disable-submit", Text = "Вимкнути 2FA", TextKey = "security.disable", Type = "submit", Variant = "danger" }' />
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ================= TAB 3: SESSIONS ================= -->
+<div class="tab-pane" id="tab-pane-sessions">
+    <div class="card section">
+        <div class="sessions-header-row">
+            <div>
+                <h3 class="section-title mb-0" data-i18n="sessions.title">Активні сесії</h3>
+                <p class="field-help" data-i18n="sessions.subtitle">Пристрої, на яких виконано вхід у ваш акаунт.</p>
+            </div>
+            <button type="button" class="btn btn-secondary" id="revoke-all-btn" data-i18n="sessions.revokeAll">Завершити всі інші сесії</button>
+        </div>
+
+        <div id="sessions-list" class="item-list"></div>
+        <p id="sessions-empty" class="field-help" data-i18n="sessions.empty">Немає активних сесій.</p>
+    </div>
+</div>
+
+<!-- ================= TAB 4: INTEGRATIONS ================= -->
+<div class="tab-pane" id="tab-pane-integrations">
+    <div class="card section">
+        <div class="integrations-header">
+            <div>
+                <h3 class="section-title mb-0" data-i18n="integrations.title">Інтеграції та сервіси</h3>
+                <p class="field-help" data-i18n="integrations.subtitle">Підключайте месенджери, репозиторії та платформи для швидкого зв'язку з учасниками команд.</p>
+            </div>
+            <div class="integrations-search-wrap">
+                <input type="text" id="integrations-search" class="input integrations-search-input" placeholder="Пошук сервісу..." data-i18n-placeholder="integrations.searchPlaceholder" />
+                <svg class="integrations-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </div>
+        </div>
+
+        <div id="integrations-alert" class="alert alert-success"></div>
+        <div class="integrations-grid" id="integrations-grid"></div>
+    </div>
+</div>
+
+<!-- ================= MODAL: AVATAR MANAGEMENT ================= -->
+<div class="modal-backdrop" id="avatar-modal">
+    <div class="modal-card modal-card-sm">
+        <div class="modal-header">
+            <h3 class="modal-title" data-i18n="profile.avatarModalTitle">Фото профілю</h3>
+            <button type="button" class="btn btn-ghost" id="avatar-modal-close" aria-label="Закрити">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="avatar-modal-alert" class="alert alert-danger"></div>
+            <div id="avatar-modal-success" class="alert alert-success"></div>
+
+            <div class="avatar-preview-lg">
+                <img id="avatar-modal-img" class="avatar-modal-img" alt="Preview" />
+                <span id="avatar-modal-fallback">?</span>
+            </div>
+
+            <div class="avatar-modal-dropzone" id="avatar-dropzone">
+                <svg class="avatar-drop-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <div>
+                    <span data-i18n="profile.avatarDragDrop">Перетягніть файл сюди або</span>
+                    <strong class="text-brand-underline" data-i18n="profile.avatarBrowse">оберіть на пристрої</strong>
+                </div>
+                <small class="field-help" data-i18n="profile.avatarRequirements">PNG, JPG або WebP, макс. 5 МБ</small>
+                <input type="file" id="avatar-modal-input" class="hidden-file-input" accept="image/png,image/jpeg,image/webp" />
+            </div>
+        </div>
+        <div class="modal-footer modal-footer-split">
+            <button type="button" class="btn btn-danger danger" id="avatar-modal-remove-btn" data-i18n="profile.avatarRemove">Видалити фото</button>
+            <button type="button" class="btn btn-secondary" id="avatar-modal-done-btn" data-i18n="common.close">Закрити</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= MODAL: CONNECT INTEGRATION ================= -->
+<div class="modal-backdrop" id="integration-modal">
+    <div class="modal-card modal-card-sm">
+        <div class="modal-header">
+            <h3 class="modal-title" id="integration-modal-title" data-i18n="integrations.modalTitle">Підключення сервісу</h3>
+            <button type="button" class="btn btn-ghost" id="integration-modal-close" aria-label="Закрити">&times;</button>
+        </div>
+        <form id="integration-modal-form" novalidate>
+            <input type="hidden" id="integration-provider-input" />
+            <div class="modal-body">
+                <div id="integration-modal-alert" class="alert alert-danger"></div>
+                <div class="integration-provider-header">
+                    <div id="integration-modal-icon" class="integration-card-icon"></div>
+                    <div>
+                        <h4 id="integration-modal-provider-name" class="integration-provider-title">Service</h4>
+                        <p id="integration-modal-provider-desc" class="field-help integration-provider-desc">Description</p>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="field-label" id="integration-modal-label" for="integration-account-input" data-i18n="integrations.accountLabel">Ідентифікатор / Нікнейм / Номер</label>
+                    <input type="text" class="input" id="integration-account-input" required placeholder="@@username або профіль" data-i18n-placeholder="integrations.accountPlaceholder" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="integration-modal-cancel" data-i18n="common.cancel">Скасувати</button>
+                <button type="submit" class="btn btn-primary" id="integration-modal-save" data-i18n="integrations.submitConnect">Зберегти підключення</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/auth-guard.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="~/js/pages/profile.js"></script>
+}

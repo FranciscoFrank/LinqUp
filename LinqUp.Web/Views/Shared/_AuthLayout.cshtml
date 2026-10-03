@@ -1,0 +1,181 @@
+@{
+    var culture = ViewContext.RouteData.Values["culture"]?.ToString() ?? "uk";
+}
+<!DOCTYPE html>
+<html lang="@culture">
+<head>
+    <partial name="_HeadPartial" />
+</head>
+<body>
+    <div class="auth-shell">
+        <!-- Left Column: Tech Visual Showcase -->
+        <div class="auth-visual">
+            <div class="auth-visual-grid"></div>
+            <div class="auth-visual-glow"></div>
+
+            <div class="auth-visual-top">
+                <a class="auth-brand-badge" href="/@culture/">
+                    <svg class="nav-brand-glyph" width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                        <rect width="32" height="32" rx="8" fill="url(#linqup-logo-grad-auth)" />
+                        <path d="M10 22V10M10 22H20M14 10L22 18M22 18H16M22 18V12" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="linqup-logo-grad-auth" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="var(--color-brand)" />
+                                <stop offset="1" stop-color="var(--color-accent)" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="nav-brand-text">Linq<span>Up</span></span>
+                    <span class="auth-brand-sub" data-i18n="auth.visualTag">@(culture == "uk" ? "Студентська платформа" : "Student Platform")</span>
+                </a>
+            </div>
+
+            <div class="auth-visual-content">
+                <h1 data-i18n="auth.visualTitle">@(culture == "uk" ? "LinqUp — місце, де команда збирається сама" : "LinqUp — Where teams unite effortlessly")</h1>
+                <p data-i18n="auth.visualSubtitle">@(culture == "uk" ? "Познач свої навички, знайди людей з такими самыми цілями і зроби перший спільний коміт вже цього тижня." : "Highlight your skills, discover peers with shared goals, and make your first commit together this week.")</p>
+
+                <!-- Live Team Match Showcase Card -->
+                <div class="auth-showcase-card">
+                    <div class="auth-showcase-header">
+                        <div class="auth-showcase-radar">
+                            <span class="radar-dot"></span>
+                            <span data-i18n="auth.matchBadge">@(culture == "uk" ? "Підбір команди" : "Team Match")</span>
+                        </div>
+                        <span class="auth-showcase-score" data-i18n="auth.matchScore">@(culture == "uk" ? "98% Збіг" : "98% Match")</span>
+                    </div>
+                    <div class="auth-showcase-body">
+                        <div class="auth-showcase-project" data-i18n="auth.liveMatchTitle">StudyBuddy AI</div>
+                        <div class="auth-members-list">
+                            <div class="auth-member-row">
+                                <div class="auth-member-info">
+                                    <div class="auth-member-avatar auth-member-avatar--dev">ОК</div>
+                                    <div>
+                                        <div class="auth-member-name">Олексій К.</div>
+                                        <div class="auth-member-role">Frontend Lead</div>
+                                    </div>
+                                </div>
+                                <div class="auth-skill-chips">
+                                    <span class="auth-skill-chip">React</span>
+                                    <span class="auth-skill-chip">TS</span>
+                                </div>
+                            </div>
+                            <div class="auth-member-row">
+                                <div class="auth-member-info">
+                                    <div class="auth-member-avatar auth-member-avatar--design">ДМ</div>
+                                    <div>
+                                        <div class="auth-member-name">Дарина М.</div>
+                                        <div class="auth-member-role">UI/UX Designer</div>
+                                    </div>
+                                </div>
+                                <div class="auth-skill-chips">
+                                    <span class="auth-skill-chip">Figma</span>
+                                    <span class="auth-skill-chip">Design</span>
+                                </div>
+                            </div>
+                            <div class="auth-member-row">
+                                <div class="auth-member-info">
+                                    <div class="auth-member-avatar auth-member-avatar--backend">МВ</div>
+                                    <div>
+                                        <div class="auth-member-name">Максим В.</div>
+                                        <div class="auth-member-role">Backend Dev</div>
+                                    </div>
+                                </div>
+                                <div class="auth-skill-chips">
+                                    <span class="auth-skill-chip">.NET</span>
+                                    <span class="auth-skill-chip">PostgreSQL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-visual-footer">
+                <span class="auth-stat-pill auth-stat-pill--brand">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                    <span data-i18n="auth.statStudents">@(culture == "uk" ? "500+ студентів" : "500+ students")</span>
+                </span>
+                <span class="auth-stat-pill auth-stat-pill--accent">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <circle cx="12" cy="12" r="6"></circle>
+                        <circle cx="12" cy="12" r="2"></circle>
+                    </svg>
+                    <span data-i18n="auth.statTeams">@(culture == "uk" ? "120+ команд" : "120+ teams")</span>
+                </span>
+                <span class="auth-stat-pill auth-stat-pill--warm">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
+                    <span data-i18n="auth.statUnis">@(culture == "uk" ? "40+ ВНЗ" : "40+ universities")</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Right Column: Form Container -->
+        <div class="auth-form-side">
+            <!-- Top Utility Bar -->
+            <div class="auth-top-bar">
+                <a class="auth-back-btn" href="/@culture/">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    <span data-i18n="auth.backToHome">@(culture == "uk" ? "На головну" : "Back to Home")</span>
+                </a>
+
+                <div class="auth-top-actions">
+                    <a href="/@(culture == "uk" ? "en" : "uk")@(ViewContext.HttpContext.Request.Path.Value?.Replace("/" + culture, "") ?? "")" class="auth-lang-btn" data-lang="@(culture == "uk" ? "en" : "uk")">
+                        @(culture == "uk" ? "EN" : "UA")
+                    </a>
+                    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="@(culture == "uk" ? "Змінити тему" : "Toggle theme")" title="@(culture == "uk" ? "Змінити тему" : "Toggle theme")" data-i18n-title="nav.themeToggle" data-i18n-aria="nav.themeToggle">
+                        <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Brand Logo -->
+            <div class="auth-mobile-brand">
+                <a href="/@culture/">
+                    <svg class="nav-brand-glyph" width="36" height="36" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+                        <rect width="32" height="32" rx="9" fill="url(#linqup-logo-grad-mob)" />
+                        <path d="M10 22V10M10 22H20M14 10L22 18M22 18H16M22 18V12" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="linqup-logo-grad-mob" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="var(--color-brand)" />
+                                <stop offset="1" stop-color="var(--color-accent)" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="nav-brand-text">Linq<span>Up</span></span>
+                </a>
+            </div>
+
+            @RenderBody()
+        </div>
+    </div>
+
+    <script src="~/js/translations.js" asp-append-version="true"></script>
+    <script src="~/js/i18n.js" asp-append-version="true"></script>
+    <script src="~/js/helpers.js" asp-append-version="true"></script>
+    <script src="~/js/api.js" asp-append-version="true"></script>
+    <script src="~/js/layout.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
